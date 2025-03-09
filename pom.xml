@@ -18,6 +18,8 @@
 
     <properties>
         <java.version>21</java.version>
+
+        <oracle-spring-boot-starter-ucp.version>25.1.0</oracle-spring-boot-starter-ucp.version>
     </properties>
 
     <dependencies>
@@ -69,7 +71,7 @@
         <dependency>
             <groupId>com.oracle.database.spring</groupId>
             <artifactId>oracle-spring-boot-starter-ucp</artifactId>
-            <version>25.1.0</version>
+            <version>${oracle-spring-boot-starter-ucp.version}</version>
         </dependency>
 
 
