@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      author: robotTX
+      file: changelog.sql
+      relativeToChangelogFile: true
