@@ -73,7 +73,7 @@ CREATE TABLE access_level
 CREATE TABLE todo_user
 (
     todo_id      NUMBER,
-    user_id      NUMBER,
+    user_id      VARCHAR2(36),
     access_level NUMBER NOT NULL,
     PRIMARY KEY (todo_id, user_id),
     FOREIGN KEY (todo_id) REFERENCES todo (id),
@@ -82,7 +82,7 @@ CREATE TABLE todo_user
 
 --changeset robotTX:enable-real-time-cache-mode
 --Enables real time cache, setup the indexes in NRT mode
---rollback CALL ctx_ddl.drop_preference('USERS');
+--rollback CALL ctx_ddl.drop_preference('USERS')
 CALL ctx_ddl.create_preference('USERS', 'BASIC_STORAGE');
 CALL ctx_ddl.set_attribute('USERS', 'STAGE_ITAB', 'true');
 

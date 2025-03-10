@@ -1,4 +1,4 @@
-package com.robottx.todo.MicroSpringTodoService.service.secret;
+package com.robottx.todoservice.service.secret;
 
 public interface SecretService {
 

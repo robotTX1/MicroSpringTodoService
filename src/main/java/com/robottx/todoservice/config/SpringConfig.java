@@ -1,13 +1,15 @@
-package com.robottx.todo.MicroSpringTodoService.config;
+package com.robottx.todoservice.config;
 
-import com.robottx.todo.MicroSpringTodoService.service.secret.SecretService;
+import com.robottx.todoservice.service.secret.SecretService;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.sql.DataSource;
 
 @Configuration
+@EnableJpaAuditing
 public class SpringConfig {
 
     @Bean

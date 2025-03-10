@@ -1,6 +1,6 @@
-package com.robottx.todo.MicroSpringTodoService.service.secret;
+package com.robottx.todoservice.service.secret;
 
-import com.robottx.todo.MicroSpringTodoService.config.DatabaseConfig;
+import com.robottx.todoservice.config.DatabaseConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
