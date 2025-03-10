@@ -1,6 +1,6 @@
-package com.robottx.todo.MicroSpringTodoService.config;
+package com.robottx.todoservice.config;
 
-import com.robottx.todo.MicroSpringTodoService.converter.JwtAuthConverter;
+import com.robottx.todoservice.converter.JwtAuthConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

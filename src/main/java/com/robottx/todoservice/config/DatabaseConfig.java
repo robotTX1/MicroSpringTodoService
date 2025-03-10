@@ -1,4 +1,4 @@
-package com.robottx.todo.MicroSpringTodoService.config;
+package com.robottx.todoservice.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

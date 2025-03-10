@@ -1,4 +1,4 @@
-package com.robottx.todo.MicroSpringTodoService;
+package com.robottx.todoservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.robottx.todo.MicroSpringTodoService.converter;
+package com.robottx.todoservice.converter;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
