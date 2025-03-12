@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.robottx.todo</groupId>
+    <groupId>com.robottx.todoResponse</groupId>
     <artifactId>MicroSpringTodoService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>MicroSpringTodoService</name>
@@ -20,6 +20,9 @@
         <java.version>21</java.version>
 
         <oracle-spring-boot-starter-ucp.version>25.1.0</oracle-spring-boot-starter-ucp.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <mapstruct-lombok-binding.version>0.2.0</mapstruct-lombok-binding.version>
+        <keycloak-admin-client.version>26.0.4</keycloak-admin-client.version>
     </properties>
 
     <dependencies>
@@ -48,6 +51,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.oracle.database.spring</groupId>
+            <artifactId>oracle-spring-boot-starter-ucp</artifactId>
+            <version>${oracle-spring-boot-starter-ucp.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <exclusions>
@@ -69,9 +77,15 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.oracle.database.spring</groupId>
-            <artifactId>oracle-spring-boot-starter-ucp</artifactId>
-            <version>${oracle-spring-boot-starter-ucp.version}</version>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>${keycloak-admin-client.version}</version>
         </dependency>
 
 
@@ -100,10 +114,23 @@
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${mapstruct-lombok-binding.version}</version>
+                        </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        -Amapstruct.defaultComponentModel=spring
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
