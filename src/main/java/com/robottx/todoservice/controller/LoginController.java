@@ -5,6 +5,7 @@ import com.robottx.todoservice.model.LoginResponse;
 import com.robottx.todoservice.service.LoginService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +19,8 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping(LOGIN_ENDPOINT)
-    public LoginResponse login(@RequestBody @Valid LoginRequest loginRequest) {
-        return loginService.login(loginRequest);
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+        return ResponseEntity.ok(loginService.login(loginRequest));
     }
 
 }
