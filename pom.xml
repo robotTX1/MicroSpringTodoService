@@ -23,6 +23,7 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <mapstruct-lombok-binding.version>0.2.0</mapstruct-lombok-binding.version>
         <keycloak-admin-client.version>26.0.4</keycloak-admin-client.version>
+        <rsql-jpa.version>6.0.26</rsql-jpa.version>
     </properties>
 
     <dependencies>
@@ -56,6 +57,11 @@
             <version>${oracle-spring-boot-starter-ucp.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.github.perplexhub</groupId>
+            <artifactId>rsql-jpa-spring-boot-starter</artifactId>
+            <version>${rsql-jpa.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <exclusions>
@@ -71,6 +77,9 @@
             <artifactId>ojdbc11</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -113,20 +122,20 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <annotationProcessorPaths>
-                        <path>
+                        <annotationProcessorPath>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${mapstruct.version}</version>
-                        </path>
-                        <path>
+                        </annotationProcessorPath>
+                        <annotationProcessorPath>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                        </path>
-                        <path>
+                        </annotationProcessorPath>
+                        <annotationProcessorPath>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${mapstruct-lombok-binding.version}</version>
-                        </path>
+                        </annotationProcessorPath>
                     </annotationProcessorPaths>
                     <compilerArgs>
                         -Amapstruct.defaultComponentModel=spring

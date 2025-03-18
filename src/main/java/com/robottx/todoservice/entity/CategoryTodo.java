@@ -1,11 +1,10 @@
 package com.robottx.todoservice.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,28 +19,24 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "TODO_USER")
-@IdClass(TodoAccess.TodoAccessKey.class)
+@Table(name = "CATEGORY_TODO")
+@IdClass(CategoryTodo.CategoryTodoKey.class)
 @EntityListeners(AuditingEntityListener.class)
-public class TodoAccess {
+public class CategoryTodo {
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "todo_id")
-    private Todo todo;
+    @Column(name = "category_id")
+    private Long categoryId;
 
     @Id
-    private String userId;
-
-    @ManyToOne
-    @JoinColumn(name = "access_level", nullable = false)
-    private UserAccessLevel accessLevel;
+    @Column(name = "todo_id")
+    private Long todoId;
 
     @Data
-    public static class TodoAccessKey implements Serializable {
+    public static class CategoryTodoKey implements Serializable {
 
-        private Long todo;
-        private String userId;
+        private Long categoryId;
+        private Long todoId;
 
     }
 

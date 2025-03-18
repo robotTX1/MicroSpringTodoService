@@ -8,14 +8,19 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 
 @Configuration
-@EnableJpaAuditing
+@EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
+@EnableTransactionManagement
 public class SpringConfig {
 
     @Bean
@@ -47,6 +52,11 @@ public class SpringConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
+    }
+
+    @Bean // Makes ZonedDateTime compatible with auditing fields
+    public DateTimeProvider auditingDateTimeProvider(Clock clock) {
+        return () -> Optional.of(ZonedDateTime.now(clock));
     }
 
 }
