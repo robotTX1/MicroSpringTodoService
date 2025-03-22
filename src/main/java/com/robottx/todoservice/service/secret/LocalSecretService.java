@@ -5,15 +5,18 @@ import com.robottx.todoservice.config.OAuthConfig;
 import com.robottx.todoservice.config.ServiceConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Primary
 @Service
-@Profile("local")
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "secret-provider", havingValue = "local-config")
 public class LocalSecretService implements SecretService {
 
     private final ServiceConfig serviceConfig;
