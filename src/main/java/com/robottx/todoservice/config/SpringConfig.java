@@ -1,9 +1,6 @@
 package com.robottx.todoservice.config;
 
 import com.robottx.todoservice.service.secret.SecretService;
-import org.keycloak.OAuth2Constants;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -37,17 +34,16 @@ public class SpringConfig {
                 .driverClassName("oracle.jdbc.OracleDriver")
                 .build();
     }
-
-    @Bean
-    public Keycloak getKeycloak(ServiceConfig serviceConfig, SecretService secretService) {
-        return KeycloakBuilder.builder()
-                .serverUrl(serviceConfig.getAuthorizationServerUrl())
-                .realm(secretService.getAdminRealm())
-                .clientId(secretService.getAdminClientId())
-                .clientSecret(secretService.getAdminClientSecret())
-                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-                .build();
-    }
+//    @Bean
+//    public Keycloak getKeycloak(ServiceConfig serviceConfig, SecretService secretService) {
+//        return KeycloakBuilder.builder()
+//                .serverUrl(serviceConfig.getAuthorizationServerUrl())
+//                .realm(secretService.getAdminRealm())
+//                .clientId(secretService.getAdminClientId())
+//                .clientSecret(secretService.getAdminClientSecret())
+//                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+//                .build();
+//    }
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {

@@ -1,4 +1,4 @@
-package com.robottx.todoservice.dto;
+package com.robottx.todoservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

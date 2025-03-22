@@ -11,6 +11,10 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "file:${config-directory}/service.properties")
 public class ServiceConfig {
 
+    // Vault
+    private String vaultOCID;
+    private String vaultRegion;
+
     // Database
     private String databaseUrl;
     private String databaseUsernameSecretName;
@@ -20,6 +24,7 @@ public class ServiceConfig {
     private String authorizationServerUrl;
     private String authorizationServerJwksUri;
     private String authorizationServerTokenEndpoint;
+    private String authorizationServerUsersEndpoint;
     private String applicationRealmSecretName;
     private String applicationClientIdSecretName;
     private String applicationClientSecretSecretName;
