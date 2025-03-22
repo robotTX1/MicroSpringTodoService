@@ -1,5 +1,6 @@
 package com.robottx.todoservice.service;
 
+import com.robottx.todoservice.exception.NotFoundOrUnauthorizedException;
 import com.robottx.todoservice.security.SecurityService;
 import com.robottx.todoservice.service.secret.SecretService;
 import jakarta.ws.rs.NotFoundException;
@@ -10,6 +11,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -48,11 +50,16 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public String getUserIdByEmail(String email) {
-        return keycloak.realm(secretService.getApplicationRealm())
-                .users()
-                .searchByEmail(email, true)
-                .getFirst()
-                .getId();
+        try {
+            return keycloak.realm(secretService.getApplicationRealm())
+                    .users()
+                    .searchByEmail(email, true)
+                    .getFirst()
+                    .getId();
+        } catch (NoSuchElementException exception) {
+            log.error("User not found with email {}", email);
+            throw new NotFoundOrUnauthorizedException();
+        }
     }
 
 }

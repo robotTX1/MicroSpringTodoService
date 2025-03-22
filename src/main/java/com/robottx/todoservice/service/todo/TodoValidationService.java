@@ -10,4 +10,6 @@ public interface TodoValidationService {
 
     TodoAccess validateUserAccess(String userId, Long todoId, UserAccessLevels minimumAccessLevel);
 
+    void validateUserIsNotOwner(TodoAccess todoAccess);
+
 }

@@ -1,5 +1,6 @@
 package com.robottx.todoservice.repository;
 
+import com.robottx.todoservice.entity.Todo;
 import com.robottx.todoservice.entity.TodoAccess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -23,10 +24,27 @@ public interface TodoAccessRepository extends JpaRepository<TodoAccess, Long>, J
     Set<TodoAccess> findAllByTodoId(Long todoId);
 
     @Query("""
+            SELECT ta FROM TodoAccess ta
+            INNER JOIN Todo t ON ta.todo.id = t.id
+            WHERE t.parent.id = :todoId
+            AND ta.userId = :userId
+            """)
+    Set<TodoAccess> findAllByUserIdAndParentId(String userId, Long todoId);
+
+    @Query("""
             SELECT COUNT(*) FROM TodoAccess ta
             INNER JOIN Todo t ON ta.todo.id = t.id
             WHERE t.parent.id = :todoId
             """)
     Integer countAllByParentId(Long todoId);
+
+    @Query("""
+            SELECT COUNT(*) FROM TodoAccess ta
+            INNER JOIN Todo t ON ta.todo.id = t.id
+            WHERE ta.todo.id = :todoId
+            """)
+    Integer countAllByTodoId(Long todoId);
+
+    Long todo(Todo todo);
 
 }
