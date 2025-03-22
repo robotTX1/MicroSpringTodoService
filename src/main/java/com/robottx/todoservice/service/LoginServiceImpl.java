@@ -1,7 +1,7 @@
 package com.robottx.todoservice.service;
 
 import com.robottx.todoservice.config.ServiceConfig;
-import com.robottx.todoservice.dto.KeycloakResponse;
+import com.robottx.todoservice.model.KeycloakResponse;
 import com.robottx.todoservice.model.LoginRequest;
 import com.robottx.todoservice.model.LoginResponse;
 import com.robottx.todoservice.service.secret.SecretService;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Clock;
 import java.time.ZonedDateTime;
@@ -46,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
 
     private KeycloakResponse authenticateUser(LoginRequest loginRequest) {
         var requestEntity = new HttpEntity<>(buildBody(loginRequest), createHeaders());
-        var response = restTemplate.exchange(serviceConfig.getAuthorizationServerTokenEndpoint(), HttpMethod.POST, requestEntity, KeycloakResponse.class);
+        var response = restTemplate.exchange(buildUrl(), HttpMethod.POST, requestEntity, KeycloakResponse.class);
         return response.getBody();
     }
 
@@ -65,6 +66,12 @@ public class LoginServiceImpl implements LoginService {
         form.add("code_verifier", loginRequest.getCodeVerifier());
         form.add("redirect_uri", loginRequest.getRedirectUri());
         return form;
+    }
+
+    private String buildUrl() {
+        return UriComponentsBuilder.fromUriString(serviceConfig.getAuthorizationServerTokenEndpoint())
+                .buildAndExpand(secretService.getApplicationRealm())
+                .toUriString();
     }
 
 
