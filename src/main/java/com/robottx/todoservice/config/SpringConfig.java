@@ -16,8 +16,8 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Configuration
-@EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 @EnableTransactionManagement
+@EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class SpringConfig {
 
     @Bean
@@ -31,19 +31,9 @@ public class SpringConfig {
                 .url(serviceConfig.getDatabaseUrl())
                 .username(secretService.getDatabaseUsername())
                 .password(secretService.getDatabasePassword())
-                .driverClassName("oracle.jdbc.OracleDriver")
+                .driverClassName(serviceConfig.getDriverClassName())
                 .build();
     }
-//    @Bean
-//    public Keycloak getKeycloak(ServiceConfig serviceConfig, SecretService secretService) {
-//        return KeycloakBuilder.builder()
-//                .serverUrl(serviceConfig.getAuthorizationServerUrl())
-//                .realm(secretService.getAdminRealm())
-//                .clientId(secretService.getAdminClientId())
-//                .clientSecret(secretService.getAdminClientSecret())
-//                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-//                .build();
-//    }
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {

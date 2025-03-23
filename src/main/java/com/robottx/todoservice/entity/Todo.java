@@ -1,7 +1,6 @@
 package com.robottx.todoservice.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.type.YesNoConverter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -46,7 +44,6 @@ public class Todo {
     private ZonedDateTime deadline;
 
     @Column(nullable = false)
-    @Convert(converter = YesNoConverter.class)
     private Boolean completed;
 
     @Column(length = 36, nullable = false)
@@ -57,7 +54,6 @@ public class Todo {
     private Todo parent;
 
     @Column(nullable = false)
-    @Convert(converter = YesNoConverter.class)
     private Boolean shared;
 
     @ManyToOne

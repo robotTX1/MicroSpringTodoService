@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "database-config")
-@PropertySource(value = "file:${config-directory}/database.properties")
+@PropertySource(value = "file:${config-directory}/database.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "secret-provider", havingValue = "local-config")
 public class DatabaseConfig {
 

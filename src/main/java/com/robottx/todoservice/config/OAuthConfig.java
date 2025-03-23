@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "oauth-config")
-@PropertySource(value = "file:${config-directory}/oauth.properties")
+@PropertySource(value = "file:${config-directory}/oauth.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "secret-provider", havingValue = "local-config")
 public class OAuthConfig {
 
