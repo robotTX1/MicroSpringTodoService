@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "service-config")
-@PropertySource(value = "file:${config-directory}/service.properties")
+@PropertySource(value = "file:${config-directory}/service.properties", ignoreResourceNotFound = true)
 public class ServiceConfig {
 
     // Vault
@@ -16,6 +16,7 @@ public class ServiceConfig {
     private String vaultRegion;
 
     // Database
+    private String driverClassName;
     private String databaseUrl;
     private String databaseUsernameSecretName;
     private String databasePasswordSecretName;

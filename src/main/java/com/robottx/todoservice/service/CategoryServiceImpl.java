@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Map<Long, Set<Category>> findCategoriesForTodos(Set<Long> todoIds) {
         return categoryRepository.findAllByTodoIds(todoIds).stream()
-                .collect(groupingBy(TodoWithCategory::id, mapping(TodoWithCategory::category, toSet())));
+                .collect(groupingBy(TodoWithCategory::getId, mapping(TodoWithCategory::getCategory, toSet())));
     }
 
     @Override
