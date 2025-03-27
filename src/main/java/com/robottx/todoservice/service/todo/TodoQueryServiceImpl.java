@@ -25,11 +25,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -84,7 +86,7 @@ public class TodoQueryServiceImpl implements TodoQueryService {
             Pageable pageRequest = PageRequest.of(searchRequest.getPageNumber(), searchRequest.getPageSize());
             List<TodoAccess> todos = todoAccessQueryRepository.findAll(spec, pageRequest);
             Long totalElements = todoAccessQueryRepository.getTotalElements(spec);
-            return new PageImpl<>(todos, pageRequest, totalElements);
+            return new PageImpl<>(addCategoriesToTodos(todos), pageRequest, totalElements);
         } catch (IllegalArgumentException ex) {
             log.error("Invalid search request: {} by user {}", searchRequest, userId);
             throw new InvalidSearchQueryException(ex.getMessage(), ex);
@@ -137,6 +139,15 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         Set<Category> categories = categoryService.findCategoriesByTodoId(todo.getId());
         todo.setCategories(categories);
         return todoAccess;
+    }
+
+    private List<TodoAccess> addCategoriesToTodos(List<TodoAccess> todoAccesses) {
+        Set<Long> todoIds = todoAccesses.stream()
+                .map(t -> t.getTodo().getId()).collect(Collectors.toSet());
+        Map<Long, Set<Category>> categoryMap = categoryService.findCategoriesForTodos(todoIds);
+        todoAccesses.forEach(t -> t.getTodo()
+                .setCategories(categoryMap.getOrDefault(t.getTodo().getId(), Collections.emptySet())));
+        return todoAccesses;
     }
 
 }
