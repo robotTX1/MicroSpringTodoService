@@ -11,10 +11,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "file:${config-directory}/service.properties", ignoreResourceNotFound = true)
 public class ServiceConfig {
 
-    // Vault
-    private String vaultOCID;
-    private String vaultRegion;
-
     // Database
     private String driverClassName;
     private String databaseUrl;

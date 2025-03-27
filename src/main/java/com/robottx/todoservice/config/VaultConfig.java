@@ -8,12 +8,12 @@ import org.springframework.context.annotation.PropertySource;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "database-config")
-@ConditionalOnProperty(name = "secret-provider", havingValue = "local-config")
-@PropertySource(value = "file:${config-directory}/database.properties", ignoreResourceNotFound = true)
-public class DatabaseConfig {
+@ConfigurationProperties(prefix = "vault-config")
+@ConditionalOnProperty(name = "secret-provider", havingValue = "vault")
+@PropertySource(value = "file:${config-directory}/vault.properties", ignoreResourceNotFound = true)
+public class VaultConfig {
 
-    private String username;
-    private String password;
+    private String vaultOCID;
+    private String vaultRegion;
 
 }

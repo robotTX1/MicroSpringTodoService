@@ -4,12 +4,13 @@ import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.AbstractAuthenticationDetailsProvider;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
-import com.oracle.bmc.auth.InstancePrincipalsAuthenticationDetailsProvider;
+import com.oracle.bmc.auth.okeworkloadidentity.OkeWorkloadIdentityAuthenticationDetailsProvider;
 import com.oracle.bmc.secrets.SecretsClient;
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails;
 import com.oracle.bmc.secrets.requests.GetSecretBundleByNameRequest;
 import com.oracle.bmc.secrets.responses.GetSecretBundleByNameResponse;
 import com.robottx.todoservice.config.ServiceConfig;
+import com.robottx.todoservice.config.VaultConfig;
 import com.robottx.todoservice.exception.InternalServerErrorException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @ConditionalOnProperty(name = "secret-provider", havingValue = "vault")
 public class VaultSecretService implements SecretService {
 
+    private final VaultConfig vaultConfig;
     private final ServiceConfig serviceConfig;
 
     @Value("${config-directory}")
@@ -39,7 +41,7 @@ public class VaultSecretService implements SecretService {
     @PostConstruct
     public void init() {
         try (SecretsClient client = SecretsClient.builder()
-                .region(Region.fromRegionId(serviceConfig.getVaultRegion()))
+                .region(Region.fromRegionId(vaultConfig.getVaultRegion()))
                 .build(getAuthenticationDetailsProvider())) {
             // Database
             saveSecret(client, serviceConfig.getDatabaseUsernameSecretName());
@@ -107,7 +109,7 @@ public class VaultSecretService implements SecretService {
 
     private String getSecretFromVault(SecretsClient client, String secretName) {
         GetSecretBundleByNameRequest secretBundleRequest = GetSecretBundleByNameRequest.builder()
-                .vaultId(serviceConfig.getVaultOCID())
+                .vaultId(vaultConfig.getVaultOCID())
                 .secretName(secretName)
                 .build();
         GetSecretBundleByNameResponse secretBundle = client.getSecretBundleByName(secretBundleRequest);
@@ -120,14 +122,14 @@ public class VaultSecretService implements SecretService {
             log.debug("Using local authentication provider");
             return getConfigFileAuthDetailsProvider();
         } else {
-            log.debug("Using instance principals authentication provider");
-            return getInstancePrincipalsAuthDetailsProvider();
+            log.debug("Using oke instance principals authentication provider");
+            return getOkeWorkloadIdentityAuthenticationDetailsProvider();
         }
     }
 
-    private AbstractAuthenticationDetailsProvider getInstancePrincipalsAuthDetailsProvider() {
+    private AbstractAuthenticationDetailsProvider getOkeWorkloadIdentityAuthenticationDetailsProvider() {
         try {
-            return InstancePrincipalsAuthenticationDetailsProvider.builder().build();
+            return OkeWorkloadIdentityAuthenticationDetailsProvider.builder().build();
         } catch (Exception ex) {
             throw new InternalServerErrorException("Failed to create InstancePrincipalsAuthenticationDetailsProvider", ex);
         }
