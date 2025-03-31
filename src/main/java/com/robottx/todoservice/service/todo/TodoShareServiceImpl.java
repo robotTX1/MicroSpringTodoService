@@ -4,8 +4,10 @@ import com.robottx.todoservice.domain.UserAccessLevels;
 import com.robottx.todoservice.entity.Todo;
 import com.robottx.todoservice.entity.TodoAccess;
 import com.robottx.todoservice.entity.UserAccessLevel;
+import com.robottx.todoservice.mapper.UserAccessLevelMapper;
 import com.robottx.todoservice.model.TodoShareDeleteRequest;
 import com.robottx.todoservice.model.TodoShareRequest;
+import com.robottx.todoservice.model.TodoShareResponse;
 import com.robottx.todoservice.repository.TodoAccessRepository;
 import com.robottx.todoservice.repository.TodoRepository;
 import com.robottx.todoservice.security.SecurityService;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,18 @@ public class TodoShareServiceImpl implements TodoShareService {
     private final SecurityService securityService;
     private final KeycloakService keycloakService;
     private final UserAccessLevelService userAccessLevelService;
+
+    @Override
+    public List<TodoShareResponse> getTodoShares(Long todoId) {
+        String userId = securityService.getId();
+        log.debug("Getting shares for todo with id {} by user {}", todoId, userId);
+        todoValidationService.validateUserAccess(userId, todoId, UserAccessLevels.READ);
+        List<TodoShareResponse> shares = todoAccessRepository.findAllByTodoId(todoId).stream()
+                .map(this::mapToTodoShareResponse)
+                .toList();
+        log.debug("Got {} shares for todo with id {} by user {}", shares.size(), todoId, userId);
+        return shares;
+    }
 
     @Override
     @Transactional
@@ -61,6 +76,13 @@ public class TodoShareServiceImpl implements TodoShareService {
         } else {
             deleteShareForOtherUser(userId, userIdByEmail, todoId);
         }
+    }
+
+    private TodoShareResponse mapToTodoShareResponse(TodoAccess todoAccess) {
+        return TodoShareResponse.builder()
+                .email(keycloakService.getUserEmail(todoAccess.getUserId()))
+                .accessLevel(UserAccessLevelMapper.INSTANCE.domainToModel(todoAccess.getAccessLevel()))
+                .build();
     }
 
     private void deleteSelfFromShare(String userId, Long todoId) {
