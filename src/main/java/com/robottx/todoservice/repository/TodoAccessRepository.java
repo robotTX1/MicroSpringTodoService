@@ -1,6 +1,5 @@
 package com.robottx.todoservice.repository;
 
-import com.robottx.todoservice.entity.Todo;
 import com.robottx.todoservice.entity.TodoAccess;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -44,7 +43,5 @@ public interface TodoAccessRepository extends JpaRepository<TodoAccess, Long>, J
             WHERE ta.todo.id = :todoId
             """)
     Integer countAllByTodoId(Long todoId);
-
-    Long todo(Todo todo);
 
 }
