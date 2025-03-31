@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>com.robottx.todoservice</groupId>
-    <artifactId>MicroSpringTodoService</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>MicroSpringTodoService</name>
-    <description>Spring Todo Microservice</description>
+    <artifactId>micro-spring-todo-service</artifactId>
+    <version>1.0.0</version>
+    <name>Micro Spring Todo Service</name>
+    <description>Spring based Todo Microservice</description>
 
     <properties>
         <java.version>21</java.version>
@@ -100,6 +100,11 @@
         <dependency>
             <groupId>com.oracle.oci.sdk</groupId>
             <artifactId>oci-java-sdk-secrets</artifactId>
+            <version>${oci-sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.oci.sdk</groupId>
+            <artifactId>oci-java-sdk-addons-oke-workload-identity</artifactId>
             <version>${oci-sdk.version}</version>
         </dependency>
         <dependency>
