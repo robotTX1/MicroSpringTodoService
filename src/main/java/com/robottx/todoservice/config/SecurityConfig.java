@@ -2,6 +2,7 @@ package com.robottx.todoservice.config;
 
 import com.robottx.todoservice.controller.EndpointConstants;
 import com.robottx.todoservice.converter.JwtAuthConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${springdoc.api-docs.path}/**")
+    private String springDocsPath;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthConverter converter, ServiceConfig serviceConfig) throws Exception {
         return http
@@ -22,6 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(EndpointConstants.LOGIN_ENDPOINT).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers(springDocsPath).permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
