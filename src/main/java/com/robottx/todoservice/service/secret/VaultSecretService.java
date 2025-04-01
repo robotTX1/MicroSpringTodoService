@@ -34,7 +34,7 @@ public class VaultSecretService implements SecretService {
     private final ServiceConfig serviceConfig;
 
     @Value("${config-directory}")
-    private final String configDirectory;
+    private String configDirectory;
 
     private final Map<String, String> secrets = new ConcurrentHashMap<>();
 
