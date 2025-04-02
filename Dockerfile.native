@@ -1,0 +1,34 @@
+FROM container-registry.oracle.com/graalvm/native-image:21 AS builder
+
+# Install maven
+WORKDIR /usr/share
+RUN set -x && \
+    curl -O https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -xvf apache-maven-*-bin.tar.gz  && \
+    rm apache-maven-*-bin.tar.gz && \
+    mv apache-maven-* maven && \
+    ln -s /usr/share/maven/bin/mvn /bin/
+
+WORKDIR /builder
+
+# Create a first layer to cache the "Maven World" in the local repository.
+# Incremental docker builds will always resume after that, unless you update
+# the pom
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Do the Maven build!
+# Incremental docker builds will resume here when you change sources
+COPY src src
+RUN mvn package -Pnative -Dmaven.test.skip
+
+FROM oraclelinux:9-slim
+
+WORKDIR /app
+
+# Copy the binary built in the 1st stage
+COPY --from=builder /builder/target/micro-spring-todo-service .
+
+EXPOSE 8080 9000
+
+ENTRYPOINT ["./micro-spring-todo-service"]
