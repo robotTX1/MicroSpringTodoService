@@ -4,7 +4,6 @@ import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.AbstractAuthenticationDetailsProvider;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
-import com.oracle.bmc.auth.okeworkloadidentity.OkeWorkloadIdentityAuthenticationDetailsProvider;
 import com.oracle.bmc.secrets.SecretsClient;
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails;
 import com.oracle.bmc.secrets.requests.GetSecretBundleByNameRequest;
@@ -42,7 +41,7 @@ public class VaultSecretService implements SecretService {
     public void init() {
         try (SecretsClient client = SecretsClient.builder()
                 .region(Region.fromRegionId(vaultConfig.getVaultRegion()))
-                .build(getAuthenticationDetailsProvider())) {
+                .build(getConfigFileAuthDetailsProvider())) {
             // Database
             saveSecret(client, serviceConfig.getDatabaseUsernameSecretName());
             saveSecret(client, serviceConfig.getDatabasePasswordSecretName());
@@ -117,27 +116,9 @@ public class VaultSecretService implements SecretService {
         return new String(Base64.getDecoder().decode(secretBundleContent.getContent()));
     }
 
-    private AbstractAuthenticationDetailsProvider getAuthenticationDetailsProvider() {
-        if (configDirectory.equals("local-config")) {
-            log.debug("Using local authentication provider");
-            return getConfigFileAuthDetailsProvider();
-        } else {
-            log.debug("Using oke instance principals authentication provider");
-            return getOkeWorkloadIdentityAuthenticationDetailsProvider();
-        }
-    }
-
-    private AbstractAuthenticationDetailsProvider getOkeWorkloadIdentityAuthenticationDetailsProvider() {
-        try {
-            return OkeWorkloadIdentityAuthenticationDetailsProvider.builder().build();
-        } catch (Exception ex) {
-            throw new InternalServerErrorException("Failed to create InstancePrincipalsAuthenticationDetailsProvider", ex);
-        }
-    }
-
     private AbstractAuthenticationDetailsProvider getConfigFileAuthDetailsProvider() {
         try {
-            ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse("local-config/oci.config");
+            ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse("%s/oci.config".formatted(configDirectory));
             return new ConfigFileAuthenticationDetailsProvider(configFile);
         } catch (IOException ex) {
             throw new InternalServerErrorException("Failed to create ConfigFileAuthenticationDetailsProvider", ex);
