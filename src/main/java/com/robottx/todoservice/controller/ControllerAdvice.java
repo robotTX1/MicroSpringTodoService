@@ -1,5 +1,6 @@
 package com.robottx.todoservice.controller;
 
+import com.robottx.todoservice.exception.AuthErrorException;
 import com.robottx.todoservice.exception.InvalidSearchQueryException;
 import com.robottx.todoservice.exception.ModifyOwnershipException;
 import com.robottx.todoservice.exception.NotFoundOrUnauthorizedException;
@@ -28,12 +29,13 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 
     private static final String INTERNAL_SERVER_ERROR_TITLE = "Internal Server Error";
     private static final String INTERNAL_SERVER_ERROR_DETAILS = "Something went wrong";
+    private static final String INVALID_REQUEST_TITLE = "Invalid request";
 
     @ExceptionHandler(ModifyOwnershipException.class)
     public ResponseEntity<Object> handleException(ModifyOwnershipException exception) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .type(CLIENT_ERROR_TYPE)
-                .title("Invalid request")
+                .title(INVALID_REQUEST_TITLE)
                 .details(exception.getMessage())
                 .status(HttpStatus.FORBIDDEN)
                 .build();
@@ -78,6 +80,17 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .type(CLIENT_ERROR_TYPE)
                 .title("Resource limit")
+                .details(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
+        return handleAllException(errorResponse);
+    }
+
+    @ExceptionHandler(AuthErrorException.class)
+    public ResponseEntity<Object> handleException(AuthErrorException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .type(CLIENT_ERROR_TYPE)
+                .title("Authorization error")
                 .details(exception.getMessage())
                 .status(HttpStatus.BAD_REQUEST)
                 .build();

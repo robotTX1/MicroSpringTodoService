@@ -2,9 +2,12 @@ package com.robottx.todoservice.service;
 
 import com.robottx.todoservice.model.LoginRequest;
 import com.robottx.todoservice.model.LoginResponse;
+import com.robottx.todoservice.model.RefreshRequest;
 
-public interface LoginService {
+public interface AuthService {
 
     LoginResponse login(LoginRequest loginRequest);
+
+    LoginResponse refresh(RefreshRequest refreshRequest);
 
 }
