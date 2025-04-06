@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(EndpointConstants.LOGIN_ENDPOINT).permitAll()
                         .requestMatchers(EndpointConstants.REFRESH_ENDPOINT).permitAll()
+                        .requestMatchers(EndpointConstants.LOGOUT_ENDPOINT).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(springDocsPath).permitAll()
                         .anyRequest().authenticated())
