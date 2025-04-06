@@ -13,6 +13,7 @@ import com.robottx.todoservice.repository.TodoAccessRepository;
 import com.robottx.todoservice.repository.TodoRepository;
 import com.robottx.todoservice.service.CategoryService;
 import com.robottx.todoservice.service.PriorityService;
+import com.robottx.todoservice.service.ResourceLimitService;
 import com.robottx.todoservice.service.UserAccessLevelService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +37,14 @@ public class TodoManagementServiceImpl implements TodoManagementService {
     private final CategoryService categoryService;
     private final UserAccessLevelService userAccessLevelService;
     private final PriorityService priorityService;
+    private final ResourceLimitService resourceLimitService;
 
     @Override
     @Transactional
     public TodoAccess createTodo(String userId, CreateTodoRequest request) {
         log.debug("Creating todo for user {}", userId);
-        Set<Category> categories = categoryService.createCategories(request.getCategories());
+        resourceLimitService.validateTodoResourceLimit(userId);
+        Set<Category> categories = createCategories(userId, request.getCategories());
         Priority priority = priorityService.getPriorityByLevel(request.getPriority());
         Todo parent = todoValidationService.validateTodoParent(userId, request.getParent());
         Todo todo = Todo.builder()
@@ -71,7 +74,7 @@ public class TodoManagementServiceImpl implements TodoManagementService {
     @Transactional
     public TodoAccess updateTodo(String userId, Long todoId, UpdateTodoRequest request) {
         TodoAccess todoAccess = todoValidationService.validateUserAccess(userId, todoId, UserAccessLevels.WRITE);
-        Set<Category> categories = categoryService.createCategories(request.getCategories());
+        Set<Category> categories = createCategories(userId, request.getCategories());
         Priority priority = priorityService.getPriorityByLevel(request.getPriority());
         Todo parent = todoValidationService.validateTodoParent(userId, request.getParent());
         Todo todo = todoAccess.getTodo();
@@ -111,7 +114,7 @@ public class TodoManagementServiceImpl implements TodoManagementService {
                 switch (fieldName) {
                     case "parent" -> patchTodoParent(userId, request, todo);
                     case "priority" -> todo.setPriority(priorityService.getPriorityByLevel(request.getPriority()));
-                    case "categories" -> todo.setCategories(categoryService.createCategories(request.getCategories()));
+                    case "categories" -> todo.setCategories(createCategories(userId, request.getCategories()));
                     case "deadline" -> patchDeadline(request, todo);
                     default -> todoField.set(todo, fieldValue);
                 }
@@ -157,6 +160,11 @@ public class TodoManagementServiceImpl implements TodoManagementService {
         if (request.getDeadline() != null && !request.getDeadline().equals(UpdateTodoRequest.DEFAULT_DEADLINE)) {
             todo.setDeadline(request.getDeadline());
         }
+    }
+
+    private Set<Category> createCategories(String userId, Set<String> categories) {
+        resourceLimitService.validateCategoryLimit(userId, categories.size());
+        return categoryService.createCategories(categories);
     }
 
 }

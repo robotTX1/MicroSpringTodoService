@@ -12,6 +12,7 @@ import com.robottx.todoservice.repository.TodoAccessRepository;
 import com.robottx.todoservice.repository.TodoRepository;
 import com.robottx.todoservice.security.SecurityService;
 import com.robottx.todoservice.service.KeycloakService;
+import com.robottx.todoservice.service.ResourceLimitService;
 import com.robottx.todoservice.service.UserAccessLevelService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class TodoShareServiceImpl implements TodoShareService {
     private final SecurityService securityService;
     private final KeycloakService keycloakService;
     private final UserAccessLevelService userAccessLevelService;
+    private final ResourceLimitService resourceLimitService;
 
     @Override
     public List<TodoShareResponse> getTodoShares(Long todoId) {
@@ -55,6 +57,7 @@ public class TodoShareServiceImpl implements TodoShareService {
         String userIdByEmail = keycloakService.getUserIdByEmail(request.getEmail());
         todoAccessRepository.findByUserIdAndTodoId(userIdByEmail, todoId)
                 .ifPresent(todoValidationService::validateUserIsNotOwner);
+        resourceLimitService.validateShareLimit(userId, userIdByEmail, todoId);
         Todo todo = todoAccess.getTodo();
         todo.setShared(true);
         TodoAccess newTodoAccess = TodoAccess.builder()
