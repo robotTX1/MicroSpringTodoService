@@ -4,6 +4,7 @@ import com.robottx.todoservice.exception.InvalidSearchQueryException;
 import com.robottx.todoservice.exception.ModifyOwnershipException;
 import com.robottx.todoservice.exception.NotFoundOrUnauthorizedException;
 import com.robottx.todoservice.exception.ResourceCannotBeDeletedException;
+import com.robottx.todoservice.exception.ResourceLimitException;
 import com.robottx.todoservice.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -66,6 +67,17 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .type(CLIENT_ERROR_TYPE)
                 .title("Resource exception")
+                .details(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
+        return handleAllException(errorResponse);
+    }
+
+    @ExceptionHandler(ResourceLimitException.class)
+    public ResponseEntity<Object> handleException(ResourceLimitException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .type(CLIENT_ERROR_TYPE)
+                .title("Resource limit")
                 .details(exception.getMessage())
                 .status(HttpStatus.BAD_REQUEST)
                 .build();

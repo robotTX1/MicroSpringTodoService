@@ -111,3 +111,23 @@ VALUES (2, 'MANAGE', 'Allows the user to read, write and manage the Todo');
 INSERT INTO access_level(ACCESS_LEVEL, NAME, DESCRIPTION)
 VALUES (3, 'OWNER', 'Allows the user to read, write and manage the Todo');
 COMMIT;
+
+--changeset robotTX:create-resource-limit-table
+--Create resource limit table
+--rollback DROP TABLE resource_limit
+CREATE TABLE resource_limit
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    resource   varchar(50) UNIQUE NOT NULL,
+    max_number integer            NOT NULL
+);
+
+--changeset robotTX:add-resource-limits
+--Add values for resource limit
+--rollback DELETE FROM resource_limit
+INSERT INTO resource_limit(id, resource, max_number)
+VALUES (1, 'TODO_LIMIT', 100);
+INSERT INTO resource_limit(id, resource, max_number)
+VALUES (2, 'CATEGORY_LIMIT_PER_TODO', 10);
+INSERT INTO resource_limit(id, resource, max_number)
+VALUES (3, 'SHARE_LIMIT_PER_TODO', 10);
