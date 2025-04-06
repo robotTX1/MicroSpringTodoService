@@ -21,6 +21,7 @@ public class ServiceConfig {
     private String authorizationServerUrl;
     private String authorizationServerJwksUri;
     private String authorizationServerTokenEndpoint;
+    private String authorizationServerLogoutEndpoint;
     private String authorizationServerUsersEndpoint;
     private String applicationRealmSecretName;
     private String applicationClientIdSecretName;

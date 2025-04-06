@@ -6,7 +6,9 @@ import com.robottx.todoservice.model.KeycloakErrorResponse;
 import com.robottx.todoservice.model.KeycloakResponse;
 import com.robottx.todoservice.model.LoginRequest;
 import com.robottx.todoservice.model.LoginResponse;
+import com.robottx.todoservice.model.LogoutRequest;
 import com.robottx.todoservice.model.RefreshRequest;
+import com.robottx.todoservice.security.SecurityService;
 import com.robottx.todoservice.service.secret.SecretService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
     private final RestTemplate restTemplate;
     private final ServiceConfig serviceConfig;
     private final SecretService secretService;
+    private final SecurityService securityService;
+    private final KeycloakService keycloakService;
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
@@ -50,6 +54,21 @@ public class AuthServiceImpl implements AuthService {
         return createResponse(keycloakResponse);
     }
 
+    @Override
+    public void logout(LogoutRequest refreshRequest) {
+        log.debug("Received logout request");
+        logoutUser(refreshRequest);
+        log.debug("Successfully logged out user");
+    }
+
+    @Override
+    public void logoutAll() {
+        log.debug("Received logout all request");
+        String userId = securityService.getId();
+        logoutUserFromAllSessions(userId);
+        log.debug("Successfully logged out user from all sessions");
+    }
+
     private KeycloakResponse authenticateUser(LoginRequest loginRequest) {
         var requestEntity = new HttpEntity<>(buildLoginBody(loginRequest), createHeaders());
         return callTokenEndpoint(requestEntity);
@@ -58,6 +77,17 @@ public class AuthServiceImpl implements AuthService {
     private KeycloakResponse refreshUser(RefreshRequest refreshRequest) {
         var requestEntity = new HttpEntity<>(buildRefreshBody(refreshRequest), createHeaders());
         return callTokenEndpoint(requestEntity);
+    }
+
+    private void logoutUser(LogoutRequest logoutRequest) {
+        var requestEntity = new HttpEntity<>(buildLogoutBody(logoutRequest), createHeaders());
+        String url = buildLogoutUrl();
+        restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
+    }
+
+    private void logoutUserFromAllSessions(String userId) {
+        var requestEntity = new HttpEntity<>(keycloakService.createAuthHeaders());
+        restTemplate.exchange(buildLogoutAllUrl(userId), HttpMethod.POST, requestEntity, Void.class);
     }
 
     private HttpHeaders createHeaders() {
@@ -86,6 +116,14 @@ public class AuthServiceImpl implements AuthService {
         return form;
     }
 
+    private MultiValueMap<String, String> buildLogoutBody(LogoutRequest logoutRequest) {
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("client_id", secretService.getApplicationClientId());
+        form.add("client_secret", secretService.getApplicationClientSecret());
+        form.add("refresh_token", logoutRequest.getRefreshToken());
+        return form;
+    }
+
     private KeycloakResponse callTokenEndpoint(HttpEntity<MultiValueMap<String, String>> requestEntity) {
         try {
             var response = restTemplate.exchange(buildUrl(), HttpMethod.POST, requestEntity, KeycloakResponse.class);
@@ -98,11 +136,24 @@ public class AuthServiceImpl implements AuthService {
             }
             throw new AuthErrorException(errorDescription);
         }
-
     }
 
     private String buildUrl() {
         return UriComponentsBuilder.fromUriString(serviceConfig.getAuthorizationServerTokenEndpoint())
+                .buildAndExpand(secretService.getApplicationRealm())
+                .toUriString();
+    }
+
+    private String buildLogoutUrl() {
+        return UriComponentsBuilder.fromUriString(serviceConfig.getAuthorizationServerLogoutEndpoint())
+                .buildAndExpand(secretService.getApplicationRealm())
+                .toUriString();
+    }
+
+    private String buildLogoutAllUrl(String userId) {
+        return UriComponentsBuilder.fromUriString(serviceConfig.getAuthorizationServerUsersEndpoint())
+                .pathSegment(userId)
+                .path("logout")
                 .buildAndExpand(secretService.getApplicationRealm())
                 .toUriString();
     }

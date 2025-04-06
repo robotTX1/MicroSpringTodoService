@@ -1,9 +1,12 @@
 package com.robottx.todoservice.service;
 
+import com.robottx.todoservice.model.KeycloakResponse;
+import org.springframework.http.HttpHeaders;
+
 public interface KeycloakService {
 
-    String getUserEmail(String userId);
+    KeycloakResponse getServiceToken();
 
-    String getUserIdByEmail(String email);
+    HttpHeaders createAuthHeaders();
 
 }
