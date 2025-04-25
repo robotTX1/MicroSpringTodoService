@@ -131,3 +131,10 @@ INSERT INTO resource_limit(id, resource, max_number)
 VALUES (2, 'CATEGORY_LIMIT_PER_TODO', 10);
 INSERT INTO resource_limit(id, resource, max_number)
 VALUES (3, 'SHARE_LIMIT_PER_TODO', 10);
+
+--changeset robotTX:fix-character-set-and-collation
+--Fixed character set for categories
+ALTER TABLE todo.category
+    MODIFY name VARCHAR (30)
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_bin;
