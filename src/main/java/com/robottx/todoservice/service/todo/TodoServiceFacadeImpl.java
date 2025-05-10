@@ -2,6 +2,7 @@ package com.robottx.todoservice.service.todo;
 
 import com.robottx.todoservice.entity.TodoAccess;
 import com.robottx.todoservice.model.CreateTodoRequest;
+import com.robottx.todoservice.model.PatchTodoRequest;
 import com.robottx.todoservice.model.SearchMode;
 import com.robottx.todoservice.model.SearchRequest;
 import com.robottx.todoservice.model.TodoResponse;
@@ -47,7 +48,7 @@ public class TodoServiceFacadeImpl implements TodoServiceFacade {
     }
 
     @Override
-    public TodoResponse patchTodo(Long id, UpdateTodoRequest request) {
+    public TodoResponse patchTodo(Long id, PatchTodoRequest request) {
         TodoAccess todoAccess = todoManagementService.patchTodo(securityService.getId(), id, request);
         return todoResponseMapperService.mapTodoAccessToTodoResponse(todoAccess);
     }

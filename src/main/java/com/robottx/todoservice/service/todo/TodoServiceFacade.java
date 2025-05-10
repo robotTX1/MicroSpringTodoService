@@ -1,6 +1,7 @@
 package com.robottx.todoservice.service.todo;
 
 import com.robottx.todoservice.model.CreateTodoRequest;
+import com.robottx.todoservice.model.PatchTodoRequest;
 import com.robottx.todoservice.model.SearchMode;
 import com.robottx.todoservice.model.SearchRequest;
 import com.robottx.todoservice.model.TodoResponse;
@@ -17,7 +18,7 @@ public interface TodoServiceFacade {
 
     TodoResponse updateTodo(Long id, UpdateTodoRequest request);
 
-    TodoResponse patchTodo(Long id, UpdateTodoRequest request);
+    TodoResponse patchTodo(Long id, PatchTodoRequest request);
 
     void deleteTodo(Long id);
 

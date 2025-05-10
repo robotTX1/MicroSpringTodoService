@@ -1,18 +1,18 @@
 package com.robottx.todoservice.model;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class LoginRequest {
 
-    @NotEmpty
+    @NotBlank
     private String code;
 
-    @NotEmpty
+    @NotBlank
     private String codeVerifier;
 
-    @NotEmpty
+    @NotBlank
     private String redirectUri;
 
 }

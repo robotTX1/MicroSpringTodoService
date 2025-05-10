@@ -6,19 +6,23 @@ import com.robottx.todoservice.exception.ModifyOwnershipException;
 import com.robottx.todoservice.exception.NotFoundOrUnauthorizedException;
 import com.robottx.todoservice.exception.ResourceCannotBeDeletedException;
 import com.robottx.todoservice.exception.ResourceLimitException;
+import com.robottx.todoservice.exception.UserNotFoundException;
 import com.robottx.todoservice.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.Optional;
 
 @Slf4j
 @RestControllerAdvice
@@ -30,6 +34,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     private static final String INTERNAL_SERVER_ERROR_TITLE = "Internal Server Error";
     private static final String INTERNAL_SERVER_ERROR_DETAILS = "Something went wrong";
     private static final String INVALID_REQUEST_TITLE = "Invalid request";
+    private static final String FAILED_TO_VALIDATE_REQUEST = "Failed to validate request";
 
     @ExceptionHandler(ModifyOwnershipException.class)
     public ResponseEntity<Object> handleException(ModifyOwnershipException exception) {
@@ -69,6 +74,17 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .type(CLIENT_ERROR_TYPE)
                 .title("Resource exception")
+                .details(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
+        return handleAllException(errorResponse);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleException(UserNotFoundException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .type(CLIENT_ERROR_TYPE)
+                .title(INVALID_REQUEST_TITLE)
                 .details(exception.getMessage())
                 .status(HttpStatus.BAD_REQUEST)
                 .build();
@@ -121,13 +137,28 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        FieldError fieldError = ex.getBindingResult().getFieldError();
-        String details = fieldError == null ? "Failed to validate request" :
-                "%s %s".formatted(fieldError.getField(), fieldError.getDefaultMessage());
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .type(CLIENT_ERROR_TYPE)
-                .title("Failed to validate request")
+                .title(INVALID_REQUEST_TITLE)
+                .details("Malformed request")
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
+        return handleAllException(errorResponse);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String details = Optional.ofNullable(ex.getFieldError())
+                .map(e -> "%s %s".formatted(e.getField(), e.getDefaultMessage()))
+                .orElse(ex.getAllErrors().stream()
+                        .findAny()
+                        .map(ObjectError::getDefaultMessage)
+                        .orElse(FAILED_TO_VALIDATE_REQUEST)
+                );
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .type(CLIENT_ERROR_TYPE)
+                .title(FAILED_TO_VALIDATE_REQUEST)
                 .details(details)
                 .status(HttpStatus.BAD_REQUEST)
                 .build();
