@@ -2,11 +2,12 @@ package com.robottx.todoservice.service;
 
 import com.robottx.todoservice.config.ServiceConfig;
 import com.robottx.todoservice.exception.InternalServerErrorException;
-import com.robottx.todoservice.exception.NotFoundOrUnauthorizedException;
+import com.robottx.todoservice.exception.UserNotFoundException;
 import com.robottx.todoservice.model.KeycloakUserResponse;
 import com.robottx.todoservice.service.secret.SecretService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -23,6 +24,8 @@ import java.util.concurrent.ConcurrentMap;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    private static final String USER_NOT_FOUND_BY_EMAIL = "User with email %s not found";
 
     private final ConcurrentMap<String, String> idCache = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, String> emailCache = new ConcurrentHashMap<>();
@@ -45,10 +48,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getUserIdByEmail(String email) {
         return idCache.compute(email, (k, v) -> {
-            if (v == null) {
-                return findUserIdByEmail(email);
+            if (StringUtils.isBlank(v)) {
+                throw new UserNotFoundException(USER_NOT_FOUND_BY_EMAIL.formatted(email));
             }
-            return v;
+            return findUserIdByEmail(email);
         });
     }
 
@@ -57,10 +60,10 @@ public class UserServiceImpl implements UserService {
         var response = restTemplate.exchange(buildFindUserByEmailUrl(email), HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<KeycloakUserResponse>>() {});
         if (!response.getStatusCode().is2xxSuccessful()) {
             log.error("User not found with email {}", email);
-            throw new NotFoundOrUnauthorizedException();
+            throw new UserNotFoundException(USER_NOT_FOUND_BY_EMAIL.formatted(email));
         }
         return Optional.ofNullable(response.getBody())
-                .orElseThrow(() -> new InternalServerErrorException("No user id found in response from keycloak"))
+                .orElseThrow(() -> new InternalServerErrorException(USER_NOT_FOUND_BY_EMAIL.formatted(email)))
                 .getFirst()
                 .getId();
     }
@@ -70,7 +73,7 @@ public class UserServiceImpl implements UserService {
         var response = restTemplate.exchange(buildFindUserByIdUrl(userId), HttpMethod.GET, httpEntity, KeycloakUserResponse.class);
         if (!response.getStatusCode().is2xxSuccessful()) {
             log.error("User not found with id {}", userId);
-            throw new NotFoundOrUnauthorizedException();
+            throw new InternalServerErrorException();
         }
         return Optional.ofNullable(response.getBody())
                 .orElseThrow(() -> new InternalServerErrorException("No user email found in response from keycloak"))

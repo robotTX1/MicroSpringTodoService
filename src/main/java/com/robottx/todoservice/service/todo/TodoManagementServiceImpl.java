@@ -8,6 +8,7 @@ import com.robottx.todoservice.entity.TodoAccess;
 import com.robottx.todoservice.entity.UserAccessLevel;
 import com.robottx.todoservice.exception.ResourceCannotBeDeletedException;
 import com.robottx.todoservice.model.CreateTodoRequest;
+import com.robottx.todoservice.model.PatchTodoRequest;
 import com.robottx.todoservice.model.UpdateTodoRequest;
 import com.robottx.todoservice.repository.TodoAccessRepository;
 import com.robottx.todoservice.repository.TodoRepository;
@@ -92,11 +93,11 @@ public class TodoManagementServiceImpl implements TodoManagementService {
 
     @Override
     @Transactional
-    public TodoAccess patchTodo(String userId, Long todoId, UpdateTodoRequest request) {
+    public TodoAccess patchTodo(String userId, Long todoId, PatchTodoRequest request) {
         TodoAccess todoAccess = todoValidationService.validateUserAccess(userId, todoId, UserAccessLevels.WRITE);
         Todo todo = todoAccess.getTodo();
         try {
-            Field[] declaredFields = UpdateTodoRequest.class.getDeclaredFields();
+            Field[] declaredFields = PatchTodoRequest.class.getDeclaredFields();
             for (Field field : declaredFields) {
                 field.setAccessible(true);
                 String fieldName = field.getName();
@@ -145,7 +146,7 @@ public class TodoManagementServiceImpl implements TodoManagementService {
         log.debug("Todo with id {} successfully deleted by user {}", todoId, userId);
     }
 
-    private void patchTodoParent(String userId, UpdateTodoRequest request, Todo todo) {
+    private void patchTodoParent(String userId, PatchTodoRequest request, Todo todo) {
         if (request.getParent() != null) {
             if (request.getParent() == -1L) {
                 todo.setParent(null);
@@ -156,8 +157,8 @@ public class TodoManagementServiceImpl implements TodoManagementService {
         }
     }
 
-    private void patchDeadline(UpdateTodoRequest request, Todo todo) {
-        if (request.getDeadline() != null && !request.getDeadline().equals(UpdateTodoRequest.DEFAULT_DEADLINE)) {
+    private void patchDeadline(PatchTodoRequest request, Todo todo) {
+        if (request.getDeadline() != null && !request.getDeadline().equals(PatchTodoRequest.DEFAULT_DEADLINE)) {
             todo.setDeadline(request.getDeadline());
         }
     }

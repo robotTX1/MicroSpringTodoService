@@ -1,9 +1,7 @@
 package com.robottx.todoservice.model;
 
-import com.robottx.todoservice.validation.ValidTodoTitleOrDescription;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -11,8 +9,9 @@ import java.time.ZonedDateTime;
 import java.util.Set;
 
 @Data
-@ValidTodoTitleOrDescription
-public class UpdateTodoRequest implements BaseTodoRequest {
+public class PatchTodoRequest implements BaseTodoRequest {
+
+    public static final ZonedDateTime DEFAULT_DEADLINE = ZonedDateTime.parse("1970-01-01T00:00:00.000Z");
 
     @Size(max = 100)
     private String title;
@@ -20,16 +19,14 @@ public class UpdateTodoRequest implements BaseTodoRequest {
     @Size(max = 4000)
     private String description;
 
-    private ZonedDateTime deadline;
+    private ZonedDateTime deadline = DEFAULT_DEADLINE;
 
-    @NotNull
     private Boolean completed;
 
     private Long parent;
 
     @Min(0)
     @Max(4)
-    @NotNull
     private Integer priority;
 
     private Set<String> categories;

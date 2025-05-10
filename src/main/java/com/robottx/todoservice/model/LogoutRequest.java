@@ -1,12 +1,12 @@
 package com.robottx.todoservice.model;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class LogoutRequest {
 
-    @NotEmpty
+    @NotBlank
     private String refreshToken;
 
 }

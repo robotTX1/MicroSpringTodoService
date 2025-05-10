@@ -1,6 +1,7 @@
 package com.robottx.todoservice.controller;
 
 import com.robottx.todoservice.model.CreateTodoRequest;
+import com.robottx.todoservice.model.PatchTodoRequest;
 import com.robottx.todoservice.model.SearchMode;
 import com.robottx.todoservice.model.SearchRequest;
 import com.robottx.todoservice.model.TodoResponse;
@@ -55,7 +56,7 @@ public class TodoController {
     }
 
     @PatchMapping(TODO_BY_ID_ENDPOINT)
-    public ResponseEntity<TodoResponse> patchTodo(@PathVariable Long todoId, @RequestBody UpdateTodoRequest request) {
+    public ResponseEntity<TodoResponse> patchTodo(@PathVariable Long todoId, @RequestBody @Valid PatchTodoRequest request) {
         return ResponseEntity.ok(todoServiceFacade.patchTodo(todoId, request));
     }
 

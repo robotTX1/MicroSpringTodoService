@@ -24,6 +24,15 @@
     "allPublicFields": true
   },
   {
+    "name": "com.robottx.todoservice.model.PatchTodoRequest",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
     "name": "com.robottx.todoservice.model.ErrorResponse",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
@@ -115,6 +124,15 @@
   },
   {
     "name": "com.robottx.todoservice.model.UserAccessLevelResponse",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
+    "name": "com.robottx.todoservice.validation.TodoValidator",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,
