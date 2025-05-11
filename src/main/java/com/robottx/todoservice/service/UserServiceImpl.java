@@ -48,10 +48,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getUserIdByEmail(String email) {
         return idCache.compute(email, (k, v) -> {
-            if (StringUtils.isBlank(v)) {
-                throw new UserNotFoundException(USER_NOT_FOUND_BY_EMAIL.formatted(email));
+            if (v == null) {
+                return findUserIdByEmail(email);
             }
-            return findUserIdByEmail(email);
+            if (StringUtils.isBlank(v)) {
+                throw new InternalServerErrorException("Empty email cached");
+            }
+            return v;
         });
     }
 

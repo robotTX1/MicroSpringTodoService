@@ -11,14 +11,15 @@ import com.robottx.todoservice.model.TodoShareResponse;
 import com.robottx.todoservice.repository.TodoAccessRepository;
 import com.robottx.todoservice.repository.TodoRepository;
 import com.robottx.todoservice.security.SecurityService;
-import com.robottx.todoservice.service.UserService;
 import com.robottx.todoservice.service.ResourceLimitService;
 import com.robottx.todoservice.service.UserAccessLevelService;
+import com.robottx.todoservice.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,6 +43,7 @@ public class TodoShareServiceImpl implements TodoShareService {
         log.debug("Getting shares for todo with id {} by user {}", todoId, userId);
         todoValidationService.validateUserAccess(userId, todoId, UserAccessLevels.READ);
         List<TodoShareResponse> shares = todoAccessRepository.findAllByTodoId(todoId).stream()
+                .sorted(Comparator.comparing(t -> t.getAccessLevel().getAccessLevel(), Comparator.reverseOrder()))
                 .map(this::mapToTodoShareResponse)
                 .toList();
         log.debug("Got {} shares for todo with id {} by user {}", shares.size(), todoId, userId);
