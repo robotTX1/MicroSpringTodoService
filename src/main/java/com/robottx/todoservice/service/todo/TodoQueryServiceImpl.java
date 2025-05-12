@@ -8,7 +8,6 @@ import com.robottx.todoservice.exception.InvalidSearchQueryException;
 import com.robottx.todoservice.exception.NotFoundOrUnauthorizedException;
 import com.robottx.todoservice.model.SearchMode;
 import com.robottx.todoservice.model.SearchRequest;
-import com.robottx.todoservice.repository.TodoAccessQueryRepository;
 import com.robottx.todoservice.repository.TodoAccessRepository;
 import com.robottx.todoservice.service.CategoryService;
 import cz.jirutka.rsql.parser.RSQLParserException;
@@ -56,7 +55,6 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         RSQLJPASupport.addPropertyBlacklist(Todo.class, PROHIBITED_PROPERTIES);
     }
 
-    private final TodoAccessQueryRepository todoAccessQueryRepository;
     private final TodoAccessRepository todoAccessRepository;
     private final CategoryService categoryService;
 
@@ -84,9 +82,8 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         try {
             Specification<TodoAccess> spec = filterAndSearchTodos(userId, searchRequest, searchMode);
             Pageable pageRequest = PageRequest.of(searchRequest.getPageNumber(), searchRequest.getPageSize());
-            List<TodoAccess> todos = todoAccessQueryRepository.findAll(spec, pageRequest);
-            Long totalElements = todoAccessQueryRepository.getTotalElements(spec);
-            return new PageImpl<>(addCategoriesToTodos(todos), pageRequest, totalElements);
+            Page<TodoAccess> todos = todoAccessRepository.findAll(spec, pageRequest);
+            return new PageImpl<>(addCategoriesToTodos(todos.getContent()), todos.getPageable(), todos.getTotalElements());
         } catch (IllegalArgumentException ex) {
             log.error("Invalid search request: {} by user {}", searchRequest, userId);
             throw new InvalidSearchQueryException(ex.getMessage(), ex);
@@ -101,6 +98,7 @@ public class TodoQueryServiceImpl implements TodoQueryService {
 
     private Specification<TodoAccess> filterAndSearchTodos(String userId, SearchRequest searchRequest, SearchMode searchMode) {
         Specification<TodoAccess> query = filterByUserId(userId)
+                .and(applyDistinctIfNeeded(searchRequest.getSearch()))
                 .and(filterBySearchMode(searchMode));
         if (!StringUtils.isEmpty(searchRequest.getSearch())) {
             query = addSearchSpecification(query, searchRequest.getSearch());
@@ -109,6 +107,14 @@ public class TodoQueryServiceImpl implements TodoQueryService {
             query = applySorting(query, searchRequest.getSort());
         }
         return query;
+    }
+
+    private Specification<TodoAccess> applyDistinctIfNeeded(String search) {
+        return (root, query, criteriaBuilder) -> {
+            // TODO Find a proper solution
+            query.distinct(!StringUtils.isEmpty(search) && search.contains("categories"));
+            return criteriaBuilder.conjunction();
+        };
     }
 
     private Specification<TodoAccess> filterByUserId(String userId) {
