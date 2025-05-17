@@ -1,5 +1,6 @@
 package com.robottx.todoservice.service.todo;
 
+import com.robottx.todoservice.domain.QueryParams;
 import com.robottx.todoservice.domain.UserAccessLevels;
 import com.robottx.todoservice.entity.Category;
 import com.robottx.todoservice.entity.Todo;
@@ -8,6 +9,7 @@ import com.robottx.todoservice.exception.InvalidSearchQueryException;
 import com.robottx.todoservice.exception.NotFoundOrUnauthorizedException;
 import com.robottx.todoservice.model.SearchMode;
 import com.robottx.todoservice.model.SearchRequest;
+import com.robottx.todoservice.repository.TodoAccessQueryRepository;
 import com.robottx.todoservice.repository.TodoAccessRepository;
 import com.robottx.todoservice.service.CategoryService;
 import cz.jirutka.rsql.parser.RSQLParserException;
@@ -20,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,7 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         RSQLJPASupport.addPropertyBlacklist(Todo.class, PROHIBITED_PROPERTIES);
     }
 
+    private final TodoAccessQueryRepository todoAccessQueryRepository;
     private final TodoAccessRepository todoAccessRepository;
     private final CategoryService categoryService;
 
@@ -68,7 +70,7 @@ public class TodoQueryServiceImpl implements TodoQueryService {
 
     @Override
     public TodoAccess findTodoById(String userId, Long todoId) {
-        log.debug("Getting todo by {} for user {}", todoId, userId);
+        log.debug("Getting todo {} by user {}", todoId, userId);
         Optional<TodoAccess> todoOptional = todoAccessRepository.findByUserIdAndTodoId(userId, todoId);
         return todoOptional
                 .map(this::addCategoryToTodo)
@@ -80,10 +82,10 @@ public class TodoQueryServiceImpl implements TodoQueryService {
 
     private Page<TodoAccess> queryTodos(String userId, SearchRequest searchRequest, SearchMode searchMode) {
         try {
-            Specification<TodoAccess> spec = filterAndSearchTodos(userId, searchRequest, searchMode);
-            Pageable pageRequest = PageRequest.of(searchRequest.getPageNumber(), searchRequest.getPageSize());
-            Page<TodoAccess> todos = todoAccessRepository.findAll(spec, pageRequest);
-            return new PageImpl<>(addCategoriesToTodos(todos.getContent()), todos.getPageable(), todos.getTotalElements());
+            QueryParams<TodoAccess> queryParams = createQueryParams(userId, searchRequest, searchMode);
+            Page<TodoAccess> todos = todoAccessQueryRepository.findAll(queryParams);
+            long totalElements = todos.getTotalElements();
+            return new PageImpl<>(addCategoriesToTodos(todos.getContent()), queryParams.getPageable(), totalElements);
         } catch (IllegalArgumentException ex) {
             log.error("Invalid search request: {} by user {}", searchRequest, userId);
             throw new InvalidSearchQueryException(ex.getMessage(), ex);
@@ -96,25 +98,23 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         }
     }
 
-    private Specification<TodoAccess> filterAndSearchTodos(String userId, SearchRequest searchRequest, SearchMode searchMode) {
+    private QueryParams<TodoAccess> createQueryParams(String userId, SearchRequest searchRequest, SearchMode searchMode) {
         Specification<TodoAccess> query = filterByUserId(userId)
-                .and(applyDistinctIfNeeded(searchRequest.getSearch()))
                 .and(filterBySearchMode(searchMode));
+        Specification<TodoAccess> sort = null;
         if (!StringUtils.isEmpty(searchRequest.getSearch())) {
             query = addSearchSpecification(query, searchRequest.getSearch());
         }
         if (!StringUtils.isEmpty(searchRequest.getSort())) {
-            query = applySorting(query, searchRequest.getSort());
-        }
-        return query;
-    }
 
-    private Specification<TodoAccess> applyDistinctIfNeeded(String search) {
-        return (root, query, criteriaBuilder) -> {
-            // TODO Find a proper solution
-            query.distinct(!StringUtils.isEmpty(search) && search.contains("categories"));
-            return criteriaBuilder.conjunction();
-        };
+            sort = createSort(searchRequest.getSort());
+        }
+        return QueryParams.<TodoAccess>builder()
+                .userId(userId)
+                .querySpecification(query)
+                .sortSpecification(sort)
+                .pageable(PageRequest.of(searchRequest.getPageNumber(), searchRequest.getPageSize()))
+                .build();
     }
 
     private Specification<TodoAccess> filterByUserId(String userId) {
@@ -136,7 +136,9 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         return spec.and(RSQLJPASupport.toSpecification(search, PROPERTY_MAP));
     }
 
-    private Specification<TodoAccess> applySorting(Specification<TodoAccess> spec, String sort) {
+    private Specification<TodoAccess> createSort(String sort) {
+        Specification<TodoAccess> spec = (root, query, criteriaBuilder) ->
+                criteriaBuilder.conjunction();
         return spec.and(RSQLJPASupport.toSort(sort, PROPERTY_MAP));
     }
 
