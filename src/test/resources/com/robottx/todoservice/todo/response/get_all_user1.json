@@ -1,0 +1,134 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "title": "Test Todo",
+      "description": "My test todo description",
+      "deadline": "2027-10-02T09:15:30Z",
+      "completed": false,
+      "ownerEmail": "test.user1@example.com",
+      "parentId": null,
+      "shared": false,
+      "priority": {
+        "priorityLevel": 2,
+        "name": "Normal"
+      },
+      "categories": [],
+      "accessLevel": {
+        "accessLevel": 3,
+        "name": "OWNER",
+        "description": "Allows the user to read, write and manage the Todo"
+      },
+      "createdAt": "2025-08-15T10:00:00Z",
+      "updatedAt": "2025-08-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "title": "No priority todo",
+      "description": "My test todo description, this todo has categories",
+      "deadline": null,
+      "completed": false,
+      "ownerEmail": "test.user1@example.com",
+      "parentId": null,
+      "shared": false,
+      "priority": {
+        "priorityLevel": 0,
+        "name": "Not required"
+      },
+      "categories": [
+        "category-2",
+        "category-1",
+        "category-3"
+      ],
+      "accessLevel": {
+        "accessLevel": 3,
+        "name": "OWNER",
+        "description": "Allows the user to read, write and manage the Todo"
+      },
+      "createdAt": "2025-09-15T10:00:00Z",
+      "updatedAt": "2025-08-15T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Completed Todo",
+      "description": "Job is done",
+      "deadline": "2025-10-02T09:15:30Z",
+      "completed": true,
+      "ownerEmail": "test.user1@example.com",
+      "parentId": null,
+      "shared": false,
+      "priority": {
+        "priorityLevel": 3,
+        "name": "High"
+      },
+      "categories": [
+        "category-1",
+        "category-3"
+      ],
+      "accessLevel": {
+        "accessLevel": 3,
+        "name": "OWNER",
+        "description": "Allows the user to read, write and manage the Todo"
+      },
+      "createdAt": "2025-09-15T10:00:00Z",
+      "updatedAt": "2025-08-15T11:00:00Z"
+    },
+    {
+      "id": 4,
+      "title": "Todo with Parent",
+      "description": "Can be done after the parent is done",
+      "deadline": "2025-11-02T10:15:30Z",
+      "completed": false,
+      "ownerEmail": "test.user1@example.com",
+      "parentId": 3,
+      "shared": false,
+      "priority": {
+        "priorityLevel": 4,
+        "name": "Critical"
+      },
+      "categories": [
+        "category-2",
+        "category-4"
+      ],
+      "accessLevel": {
+        "accessLevel": 3,
+        "name": "OWNER",
+        "description": "Allows the user to read, write and manage the Todo"
+      },
+      "createdAt": "2025-10-15T15:00:00Z",
+      "updatedAt": "2025-08-15T10:00:00Z"
+    },
+    {
+      "id": 5,
+      "title": "Shared todo!",
+      "description": "Shared with testuser2",
+      "deadline": "2026-12-02T10:15:30Z",
+      "completed": false,
+      "ownerEmail": "test.user1@example.com",
+      "parentId": null,
+      "shared": true,
+      "priority": {
+        "priorityLevel": 2,
+        "name": "Normal"
+      },
+      "categories": [
+        "category-4",
+        "category-3",
+        "category-5"
+      ],
+      "accessLevel": {
+        "accessLevel": 3,
+        "name": "OWNER",
+        "description": "Allows the user to read, write and manage the Todo"
+      },
+      "createdAt": "2025-10-15T10:00:00Z",
+      "updatedAt": "2025-08-15T15:30:00Z"
+    }
+  ],
+  "page": {
+    "size": 20,
+    "number": 0,
+    "totalElements": 5,
+    "totalPages": 1
+  }
+}
