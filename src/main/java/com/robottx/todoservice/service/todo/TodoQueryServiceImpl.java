@@ -49,7 +49,7 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         PROPERTY_MAP.put("completed", "todo.completed");
         PROPERTY_MAP.put("parentId", "todo.parent.id");
         PROPERTY_MAP.put("shared", "todo.shared");
-        PROPERTY_MAP.put("priority", "todo.priority");
+        PROPERTY_MAP.put("priority", "todo.priority.priorityLevel");
         PROPERTY_MAP.put("categories", "todo.categories");
         PROPERTY_MAP.put("createdAt", "todo.createdAt");
         PROPERTY_MAP.put("updatedAt", "todo.updatedAt");

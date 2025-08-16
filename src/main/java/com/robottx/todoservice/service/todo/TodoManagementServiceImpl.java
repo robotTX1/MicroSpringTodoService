@@ -160,6 +160,8 @@ public class TodoManagementServiceImpl implements TodoManagementService {
     private void patchDeadline(PatchTodoRequest request, Todo todo) {
         if (request.getDeadline() != null && !request.getDeadline().equals(PatchTodoRequest.DEFAULT_DEADLINE)) {
             todo.setDeadline(request.getDeadline());
+        } else if (request.getDeadline() == null) {
+            todo.setDeadline(null);
         }
     }
 
