@@ -1,6 +1,7 @@
 package com.robottx.todoservice.model;
 
 import com.robottx.todoservice.validation.ValidTodoTitleOrDescription;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +21,7 @@ public class CreateTodoRequest implements BaseTodoRequest {
     @Size(max = 4000)
     private String description;
 
+    @Future
     private ZonedDateTime deadline;
 
     @NotNull

@@ -1,0 +1,14 @@
+{
+  "id": 8,
+  "title": "This title was updated through the patch API with WRITE privileges",
+  "description": "Shared with user1 with write privilege",
+  "deadline": "2027-10-02T09:15:30Z",
+  "completed": false,
+  "parentId": null,
+  "shared": true,
+  "priority": 2,
+  "categories": [],
+  "accessLevel": 1,
+  "createdAt": "2025-08-15T10:00:00Z",
+  "updatedAt": "2025-08-16T13:30:10Z"
+}

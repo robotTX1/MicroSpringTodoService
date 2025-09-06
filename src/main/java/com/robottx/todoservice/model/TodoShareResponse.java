@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class TodoShareResponse {
 
     private String email;
-    private UserAccessLevelResponse accessLevel;
+    private Integer accessLevel;
 
 }

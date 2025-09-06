@@ -26,7 +26,7 @@ public class TodoServiceFacadeImpl implements TodoServiceFacade {
     public PagedModel<TodoResponse> findAllTodos(SearchRequest searchRequest, SearchMode searchMode) {
         Page<TodoAccess> pagedTodoAccesses =
                 todoQueryService.findAllTodos(securityService.getId(), searchRequest, searchMode);
-        return todoResponseMapperService.mapTodoAccessesToToResponses(pagedTodoAccesses);
+        return todoResponseMapperService.mapTodoAccessesToResponses(pagedTodoAccesses);
     }
 
     @Override

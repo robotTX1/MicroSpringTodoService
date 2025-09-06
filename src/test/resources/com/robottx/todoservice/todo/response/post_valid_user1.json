@@ -1,0 +1,17 @@
+{
+  "id": 1000000,
+  "title": "Post new Todo",
+  "description": "This todo is created via the post endpoint",
+  "deadline": "2026-10-02T09:15:30Z",
+  "completed": false,
+  "parentId": null,
+  "shared": false,
+  "priority": 4,
+  "categories": [
+    "category-1",
+    "category-3"
+  ],
+  "accessLevel": 3,
+  "createdAt": "2025-08-16T13:30:10Z",
+  "updatedAt": "2025-08-16T13:30:10Z"
+}

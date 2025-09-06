@@ -1,0 +1,5 @@
+{
+  "type": "ClientError",
+  "title": "Invalid request",
+  "details": "Cannot change owner's access level"
+}

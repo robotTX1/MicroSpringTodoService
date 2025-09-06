@@ -1,0 +1,12 @@
+{
+  "title": "Put todo test",
+  "description": "This todo was updated with the put API",
+  "deadline": "123",
+  "completed": true,
+  "parent": 2,
+  "priority": 4,
+  "categories": [
+    "category-1",
+    "category-5"
+  ]
+}

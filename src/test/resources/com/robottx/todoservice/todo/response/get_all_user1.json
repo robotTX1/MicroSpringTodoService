@@ -6,19 +6,11 @@
       "description": "My test todo description",
       "deadline": "2027-10-02T09:15:30Z",
       "completed": false,
-      "ownerEmail": "test.user1@example.com",
       "parentId": null,
       "shared": false,
-      "priority": {
-        "priorityLevel": 2,
-        "name": "Normal"
-      },
+      "priority": 2,
       "categories": [],
-      "accessLevel": {
-        "accessLevel": 3,
-        "name": "OWNER",
-        "description": "Allows the user to read, write and manage the Todo"
-      },
+      "accessLevel": 3,
       "createdAt": "2025-08-15T10:00:00Z",
       "updatedAt": "2025-08-15T10:00:00Z"
     },
@@ -28,23 +20,15 @@
       "description": "My test todo description, this todo has categories",
       "deadline": null,
       "completed": false,
-      "ownerEmail": "test.user1@example.com",
       "parentId": null,
       "shared": false,
-      "priority": {
-        "priorityLevel": 0,
-        "name": "Not required"
-      },
+      "priority": 0,
       "categories": [
-        "category-2",
         "category-1",
+        "category-2",
         "category-3"
       ],
-      "accessLevel": {
-        "accessLevel": 3,
-        "name": "OWNER",
-        "description": "Allows the user to read, write and manage the Todo"
-      },
+      "accessLevel": 3,
       "createdAt": "2025-09-15T10:00:00Z",
       "updatedAt": "2025-08-15T10:00:00Z"
     },
@@ -54,22 +38,14 @@
       "description": "Job is done",
       "deadline": "2025-10-02T09:15:30Z",
       "completed": true,
-      "ownerEmail": "test.user1@example.com",
       "parentId": null,
       "shared": false,
-      "priority": {
-        "priorityLevel": 3,
-        "name": "High"
-      },
+      "priority": 3,
       "categories": [
         "category-1",
         "category-3"
       ],
-      "accessLevel": {
-        "accessLevel": 3,
-        "name": "OWNER",
-        "description": "Allows the user to read, write and manage the Todo"
-      },
+      "accessLevel": 3,
       "createdAt": "2025-09-15T10:00:00Z",
       "updatedAt": "2025-08-15T11:00:00Z"
     },
@@ -79,22 +55,14 @@
       "description": "Can be done after the parent is done",
       "deadline": "2025-11-02T10:15:30Z",
       "completed": false,
-      "ownerEmail": "test.user1@example.com",
       "parentId": 3,
       "shared": false,
-      "priority": {
-        "priorityLevel": 4,
-        "name": "Critical"
-      },
+      "priority": 4,
       "categories": [
         "category-2",
         "category-4"
       ],
-      "accessLevel": {
-        "accessLevel": 3,
-        "name": "OWNER",
-        "description": "Allows the user to read, write and manage the Todo"
-      },
+      "accessLevel": 3,
       "createdAt": "2025-10-15T15:00:00Z",
       "updatedAt": "2025-08-15T10:00:00Z"
     },
@@ -104,31 +72,65 @@
       "description": "Shared with testuser2",
       "deadline": "2026-12-02T10:15:30Z",
       "completed": false,
-      "ownerEmail": "test.user1@example.com",
       "parentId": null,
       "shared": true,
-      "priority": {
-        "priorityLevel": 2,
-        "name": "Normal"
-      },
+      "priority": 2,
       "categories": [
-        "category-4",
         "category-3",
+        "category-4",
         "category-5"
       ],
-      "accessLevel": {
-        "accessLevel": 3,
-        "name": "OWNER",
-        "description": "Allows the user to read, write and manage the Todo"
-      },
+      "accessLevel": 3,
       "createdAt": "2025-10-15T10:00:00Z",
       "updatedAt": "2025-08-15T15:30:00Z"
+    },
+    {
+      "id": 7,
+      "title": "Read Test",
+      "description": "Shared with user1 with read privilege",
+      "deadline": "2027-10-02T09:15:30Z",
+      "completed": false,
+      "parentId": null,
+      "shared": true,
+      "priority": 2,
+      "categories": [],
+      "accessLevel": 0,
+      "createdAt": "2025-08-15T10:00:00Z",
+      "updatedAt": "2025-08-15T10:00:00Z"
+    },
+    {
+      "id": 8,
+      "title": "Write Test",
+      "description": "Shared with user1 with write privilege",
+      "deadline": "2027-10-02T09:15:30Z",
+      "completed": false,
+      "parentId": null,
+      "shared": true,
+      "priority": 2,
+      "categories": [],
+      "accessLevel": 1,
+      "createdAt": "2025-08-15T10:00:00Z",
+      "updatedAt": "2025-08-15T10:00:00Z"
+    },
+    {
+      "id": 9,
+      "title": "Manage Test",
+      "description": "Shared with user1 with manage privilege",
+      "deadline": "2027-10-02T09:15:30Z",
+      "completed": false,
+      "parentId": null,
+      "shared": true,
+      "priority": 2,
+      "categories": [],
+      "accessLevel": 2,
+      "createdAt": "2025-08-15T10:00:00Z",
+      "updatedAt": "2025-08-15T10:00:00Z"
     }
   ],
   "page": {
     "size": 20,
     "number": 0,
-    "totalElements": 5,
+    "totalElements": 8,
     "totalPages": 1
   }
 }

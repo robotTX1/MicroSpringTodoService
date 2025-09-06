@@ -1,0 +1,12 @@
+{
+  "title": "Post new Todo",
+  "description": "This todo is created via the post endpoint",
+  "deadline": "2026-10-02T14:45:30.1234567+05:30",
+  "completed": false,
+  "parent": null,
+  "priority": -1,
+  "categories": [
+    "category-1",
+    "category-3"
+  ]
+}

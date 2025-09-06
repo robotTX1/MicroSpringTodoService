@@ -32,6 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
-config
 local-config
 spy.log

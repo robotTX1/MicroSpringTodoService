@@ -1,5 +1,7 @@
 package com.robottx.todoservice.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.robottx.todoservice.config.jackson.CustomZonedDateTimeSerializer;
 import com.robottx.todoservice.service.secret.SecretService;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -7,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,8 +23,14 @@ import java.util.Optional;
 @EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class SpringConfig {
 
+    public static ObjectMapper buildObjectMapper(Jackson2ObjectMapperBuilder builder) {
+        return builder
+                .serializers(new CustomZonedDateTimeSerializer())
+                .build();
+    }
+
     @Bean
-    public Clock getClock() {
+    public Clock clock() {
         return Clock.systemDefaultZone();
     }
 
@@ -33,6 +42,11 @@ public class SpringConfig {
                 .password(secretService.getDatabasePassword())
                 .driverClassName(serviceConfig.getDriverClassName())
                 .build();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
+        return buildObjectMapper(builder);
     }
 
     @Bean

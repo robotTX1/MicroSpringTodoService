@@ -1,12 +1,12 @@
 package com.robottx.todoservice.service;
 
 import com.robottx.todoservice.domain.ResourceLimits;
+import com.robottx.todoservice.domain.UserAccessLevels;
 import com.robottx.todoservice.entity.TodoAccess;
 import com.robottx.todoservice.exception.InternalServerErrorException;
 import com.robottx.todoservice.exception.ResourceLimitException;
 import com.robottx.todoservice.repository.ResourceLimitRepository;
 import com.robottx.todoservice.repository.TodoAccessRepository;
-import com.robottx.todoservice.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,13 +25,12 @@ public class ResourceLimitServiceImpl implements ResourceLimitService {
     private static final String SHARE_LIMIT_REACHED = "Max Share limit reached for Todo. Limit: %d";
     private static final String SHARE_LIMIT_REACHED_LOG = "User %s has reached the maximum limit of Shares: {} on Todo %d";
 
-    private final TodoRepository todoRepository;
     private final TodoAccessRepository todoAccessRepository;
     private final ResourceLimitRepository resourceLimitRepository;
 
     @Override
     public void validateTodoResourceLimit(String userId) {
-        Integer todoCount = todoRepository.countAllByOwner(userId) + 1;
+        Integer todoCount = todoAccessRepository.countByUserIdAndAccessLevel(userId, UserAccessLevels.OWNER.getLevel()) + 1;
         validate(ResourceLimits.TODO_LIMIT, todoCount, TODO_LIMIT_REACHED, TODO_LIMIT_REACHED_LOG.formatted(userId));
     }
 

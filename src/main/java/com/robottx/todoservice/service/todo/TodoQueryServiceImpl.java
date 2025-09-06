@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TodoQueryServiceImpl implements TodoQueryService {
 
-    private static final List<String> PROHIBITED_PROPERTIES = List.of("owner");
     private static final Map<String, String> PROPERTY_MAP = new HashMap<>();
 
     static {
@@ -53,7 +52,6 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         PROPERTY_MAP.put("categories", "todo.categories");
         PROPERTY_MAP.put("createdAt", "todo.createdAt");
         PROPERTY_MAP.put("updatedAt", "todo.updatedAt");
-        RSQLJPASupport.addPropertyBlacklist(Todo.class, PROHIBITED_PROPERTIES);
     }
 
     private final TodoAccessQueryRepository todoAccessQueryRepository;
@@ -106,7 +104,6 @@ public class TodoQueryServiceImpl implements TodoQueryService {
             query = addSearchSpecification(query, searchRequest.getSearch());
         }
         if (!StringUtils.isEmpty(searchRequest.getSort())) {
-
             sort = createSort(searchRequest.getSort());
         }
         return QueryParams.<TodoAccess>builder()

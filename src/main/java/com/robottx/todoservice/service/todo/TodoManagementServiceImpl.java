@@ -55,7 +55,6 @@ public class TodoManagementServiceImpl implements TodoManagementService {
                 .completed(request.getCompleted())
                 .categories(categories)
                 .priority(priority)
-                .owner(userId)
                 .shared(false)
                 .parent(parent)
                 .build();
@@ -120,6 +119,7 @@ public class TodoManagementServiceImpl implements TodoManagementService {
                     default -> todoField.set(todo, fieldValue);
                 }
             }
+            todoValidationService.validateTodoTitleAndDescription(todo);
             todoRepository.save(todo);
             log.debug("Successfully patched todo with id {} by user {}", todoId, userId);
         } catch (IllegalAccessException ex) {
@@ -138,7 +138,7 @@ public class TodoManagementServiceImpl implements TodoManagementService {
             throw new ResourceCannotBeDeletedException("Todo can't be deleted because it is referenced by other todos");
         }
         Todo todo = todoAccess.getTodo();
-        Set<TodoAccess> todoAccesses = todoAccessRepository.findAllByTodoId(todo.getId());
+        List<TodoAccess> todoAccesses = todoAccessRepository.findAllByTodoId(todo.getId());
         log.debug("User {} is deleting {} todo access objects", userId, todoAccesses.size());
         todoAccessRepository.deleteAll(todoAccesses);
         categoryService.deleteCategoryConnections(todo.getId());

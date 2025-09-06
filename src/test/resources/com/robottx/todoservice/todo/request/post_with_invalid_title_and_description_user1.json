@@ -1,0 +1,12 @@
+{
+  "title": "",
+  "description": "",
+  "deadline": "2026-10-02T14:45:30.1234567+05:30",
+  "completed": false,
+  "parent": null,
+  "priority": 4,
+  "categories": [
+    "category-1",
+    "category-3"
+  ]
+}

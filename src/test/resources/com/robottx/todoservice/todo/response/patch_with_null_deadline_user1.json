@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "title": "Test Todo",
+  "description": "My test todo description",
+  "deadline": null,
+  "completed": false,
+  "parentId": null,
+  "shared": false,
+  "priority": 2,
+  "categories": [],
+  "accessLevel": 3,
+  "createdAt": "2025-08-15T10:00:00Z",
+  "updatedAt": "2025-08-16T13:30:10Z"
+}

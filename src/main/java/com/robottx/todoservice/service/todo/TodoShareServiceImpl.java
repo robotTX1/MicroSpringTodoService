@@ -4,7 +4,8 @@ import com.robottx.todoservice.domain.UserAccessLevels;
 import com.robottx.todoservice.entity.Todo;
 import com.robottx.todoservice.entity.TodoAccess;
 import com.robottx.todoservice.entity.UserAccessLevel;
-import com.robottx.todoservice.mapper.UserAccessLevelMapper;
+import com.robottx.todoservice.exception.ModifyOwnershipException;
+import com.robottx.todoservice.exception.UserNotFoundException;
 import com.robottx.todoservice.model.TodoShareDeleteRequest;
 import com.robottx.todoservice.model.TodoShareRequest;
 import com.robottx.todoservice.model.TodoShareResponse;
@@ -17,9 +18,12 @@ import com.robottx.todoservice.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,16 +42,17 @@ public class TodoShareServiceImpl implements TodoShareService {
     private final ResourceLimitService resourceLimitService;
 
     @Override
-    public List<TodoShareResponse> getTodoShares(Long todoId) {
+    public PagedModel<TodoShareResponse> getTodoShares(Long todoId, Pageable pageable) {
         String userId = securityService.getId();
         log.debug("Getting shares for todo with id {} by user {}", todoId, userId);
         todoValidationService.validateUserAccess(userId, todoId, UserAccessLevels.READ);
-        List<TodoShareResponse> shares = todoAccessRepository.findAllByTodoId(todoId).stream()
-                .sorted(Comparator.comparing(t -> t.getAccessLevel().getAccessLevel(), Comparator.reverseOrder()))
+        pageable = pageable == null ? Pageable.unpaged() : pageable;
+        Page<TodoAccess> sharePage = todoAccessRepository.findAllByTodoIdPage(todoId, pageable);
+        List<TodoShareResponse> shares = sharePage.get()
                 .map(this::mapToTodoShareResponse)
                 .toList();
-        log.debug("Got {} shares for todo with id {} by user {}", shares.size(), todoId, userId);
-        return shares;
+        log.debug("Got {} shares for todo with id {} by user {}", sharePage.getTotalElements(), todoId, userId);
+        return new PagedModel<>(new PageImpl<>(shares, pageable, sharePage.getTotalElements()));
     }
 
     @Override
@@ -86,7 +91,7 @@ public class TodoShareServiceImpl implements TodoShareService {
     private TodoShareResponse mapToTodoShareResponse(TodoAccess todoAccess) {
         return TodoShareResponse.builder()
                 .email(userService.getUserEmail(todoAccess.getUserId()))
-                .accessLevel(UserAccessLevelMapper.INSTANCE.domainToModel(todoAccess.getAccessLevel()))
+                .accessLevel(todoAccess.getAccessLevel().getAccessLevel())
                 .build();
     }
 
@@ -96,7 +101,7 @@ public class TodoShareServiceImpl implements TodoShareService {
         UserAccessLevel accessLevel = todoAccess.getAccessLevel();
         if (UserAccessLevels.OWNER.getLevel() == accessLevel.getAccessLevel()) {
             log.error("User {} tried to delete owner share for todo {}", userId, todoId);
-            throw new IllegalArgumentException("Can't delete owner access");
+            throw new ModifyOwnershipException("Cannot change owner's access level");
         }
         Todo todo = todoAccess.getTodo();
         todoAccessRepository.delete(todoAccess);
@@ -109,7 +114,7 @@ public class TodoShareServiceImpl implements TodoShareService {
         log.debug("Attempting to delete share for user {} for todo {} by user {}", otherUserId, todoId, userId);
         todoValidationService.validateUserAccess(userId, todoId, UserAccessLevels.MANAGE);
         TodoAccess todoAccess = todoAccessRepository.findByUserIdAndTodoId(otherUserId, todoId)
-                .orElseThrow(() -> new IllegalArgumentException("User is not found"));
+                .orElseThrow(() -> new UserNotFoundException("User is not found"));
         todoValidationService.validateUserIsNotOwner(todoAccess);
         Todo todo = todoAccess.getTodo();
         todoAccessRepository.delete(todoAccess);

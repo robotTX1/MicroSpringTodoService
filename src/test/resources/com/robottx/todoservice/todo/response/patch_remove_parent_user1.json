@@ -1,0 +1,17 @@
+{
+  "id": 3,
+  "title": "Completed Todo",
+  "description": "Job is done",
+  "deadline": "2025-10-02T09:15:30Z",
+  "completed": true,
+  "parentId": null,
+  "shared": false,
+  "priority": 3,
+  "categories": [
+    "category-1",
+    "category-3"
+  ],
+  "accessLevel": 3,
+  "createdAt": "2025-09-15T10:00:00Z",
+  "updatedAt": "2025-08-15T11:00:00Z"
+}

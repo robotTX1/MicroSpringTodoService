@@ -9,6 +9,6 @@ public interface TodoResponseMapperService {
 
     TodoResponse mapTodoAccessToTodoResponse(TodoAccess todoAccess);
 
-    PagedModel<TodoResponse> mapTodoAccessesToToResponses(Page<TodoAccess> pagedTodoAccesses);
+    PagedModel<TodoResponse> mapTodoAccessesToResponses(Page<TodoAccess> pagedTodoAccesses);
 
 }
