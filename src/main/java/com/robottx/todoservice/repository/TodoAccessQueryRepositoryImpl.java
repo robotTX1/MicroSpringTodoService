@@ -54,7 +54,6 @@ public class TodoAccessQueryRepositoryImpl implements TodoAccessQueryRepository 
 
     private List<TodoAccess> findAllById(List<Long> ids, QueryParams<TodoAccess> queryParams) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        // Query Shared todos
         CriteriaQuery<TodoAccess> query = criteriaBuilder.createQuery(TodoAccess.class);
         Root<TodoAccess> todoAccessRoot = query.from(TodoAccess.class);
         todoAccessRoot.fetch("todo", JoinType.INNER).fetch("priority", JoinType.INNER);

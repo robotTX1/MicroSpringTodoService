@@ -1,0 +1,5 @@
+{
+  "type": "ClientError",
+  "title": "Resource limit",
+  "details": "Max Category limit reached for Todo. Limit: 10"
+}

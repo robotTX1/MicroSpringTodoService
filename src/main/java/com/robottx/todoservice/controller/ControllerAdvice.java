@@ -7,6 +7,7 @@ import com.robottx.todoservice.exception.NotFoundOrUnauthorizedException;
 import com.robottx.todoservice.exception.ResourceCannotBeDeletedException;
 import com.robottx.todoservice.exception.ResourceLimitException;
 import com.robottx.todoservice.exception.UserNotFoundException;
+import com.robottx.todoservice.exception.ValidationException;
 import com.robottx.todoservice.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -107,6 +108,17 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .type(CLIENT_ERROR_TYPE)
                 .title("Authorization error")
+                .details(exception.getMessage())
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
+        return handleAllException(errorResponse);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Object> handleException(ValidationException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .type(CLIENT_ERROR_TYPE)
+                .title(FAILED_TO_VALIDATE_REQUEST)
                 .details(exception.getMessage())
                 .status(HttpStatus.BAD_REQUEST)
                 .build();

@@ -1,0 +1,18 @@
+{
+  "content": [
+    {
+      "email": "test.user2@example.com",
+      "accessLevel": 3
+    },
+    {
+      "email": "test.user1@example.com",
+      "accessLevel": 0
+    }
+  ],
+  "page": {
+    "size": 20,
+    "number": 0,
+    "totalElements": 2,
+    "totalPages": 1
+  }
+}

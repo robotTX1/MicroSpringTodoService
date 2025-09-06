@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,9 +24,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             INNER JOIN CategoryTodo ct ON c.id = ct.categoryId
             WHERE ct.todoId = :todoId
             """)
-    Set<Category> findAllByTodoId(Long todoId);
+    LinkedHashSet<Category> findAllByTodoId(Long todoId);
 
-    Set<Category> findAllByNameIn(Set<String> categories);
+    LinkedHashSet<Category> findAllByNameIn(Set<String> categories);
 
     @Modifying
     @Query("""

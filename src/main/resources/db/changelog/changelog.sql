@@ -138,3 +138,7 @@ ALTER TABLE category
     MODIFY name VARCHAR (30)
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_bin;
+
+--changeset robotTX:remove-redundant-owner-column-from-todo
+--Remove the redundant owner column from todo table
+ALTER TABLE todo DROP COLUMN owner;

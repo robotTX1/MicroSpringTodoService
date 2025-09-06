@@ -1,0 +1,17 @@
+{
+  "id": 8,
+  "title": "Put shared todo test with privileges",
+  "description": "This todo was updated with the put API",
+  "deadline": "2025-10-06T15:30:00Z",
+  "completed": false,
+  "parentId": 2,
+  "shared": true,
+  "priority": 4,
+  "categories": [
+    "category-2",
+    "category-3"
+  ],
+  "accessLevel": 1,
+  "createdAt": "2025-08-15T10:00:00Z",
+  "updatedAt": "2025-08-16T13:30:10Z"
+}

@@ -1,5 +1,6 @@
 package com.robottx.todoservice.model;
 
+import com.robottx.todoservice.validation.FutureWithDefaultValue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -19,6 +20,7 @@ public class PatchTodoRequest implements BaseTodoRequest {
     @Size(max = 4000)
     private String description;
 
+    @FutureWithDefaultValue
     private ZonedDateTime deadline = DEFAULT_DEADLINE;
 
     private Boolean completed;

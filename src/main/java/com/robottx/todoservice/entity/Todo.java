@@ -47,9 +47,6 @@ public class Todo {
     @Column(nullable = false)
     private Boolean completed;
 
-    @Column(length = 36, nullable = false)
-    private String owner;
-
     @ManyToOne
     @EqualsAndHashCode.Exclude
     @JoinColumn(name = "parent")

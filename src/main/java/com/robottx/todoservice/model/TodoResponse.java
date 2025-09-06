@@ -19,12 +19,11 @@ public class TodoResponse {
     private String description;
     private ZonedDateTime deadline;
     private Boolean completed;
-    private String ownerEmail;
     private Long parentId;
     private Boolean shared;
-    private PriorityResponse priority;
+    private Integer priority;
     private Set<String> categories;
-    private UserAccessLevelResponse accessLevel;
+    private Integer accessLevel;
     private ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
 

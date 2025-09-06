@@ -12,4 +12,6 @@ public interface TodoValidationService {
 
     void validateUserIsNotOwner(TodoAccess todoAccess);
 
+    void validateTodoTitleAndDescription(Todo todo);
+
 }

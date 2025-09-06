@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = TodoValidator.class)
+@Constraint(validatedBy = TitleAndDescriptionValidator.class)
 public @interface ValidTodoTitleOrDescription {
 
     String message() default "Title or description must not be blank";

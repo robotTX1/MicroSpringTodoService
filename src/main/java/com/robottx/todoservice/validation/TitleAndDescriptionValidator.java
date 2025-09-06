@@ -5,7 +5,7 @@ import com.robottx.todoservice.model.BaseTodoRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class TodoValidator implements ConstraintValidator<ValidTodoTitleOrDescription, BaseTodoRequest> {
+public class TitleAndDescriptionValidator implements ConstraintValidator<ValidTodoTitleOrDescription, BaseTodoRequest> {
 
     @Override
     public boolean isValid(BaseTodoRequest value, ConstraintValidatorContext context) {

@@ -66,9 +66,9 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(USER_NOT_FOUND_BY_EMAIL.formatted(email));
         }
         return Optional.ofNullable(response.getBody())
-                .orElseThrow(() -> new InternalServerErrorException(USER_NOT_FOUND_BY_EMAIL.formatted(email)))
-                .getFirst()
-                .getId();
+                .filter(list -> !list.isEmpty())
+                .map(list -> list.getFirst().getId())
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_BY_EMAIL.formatted(email)));
     }
 
     private String findUserEmailById(String userId) {

@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "title": "This title was updated through the patch API",
+  "description": "This description was updated through the patch API",
+  "deadline": "2026-10-02T10:15:30Z",
+  "completed": true,
+  "parentId": null,
+  "shared": false,
+  "priority": 4,
+  "categories": [
+    "category-1",
+    "category-3",
+    "category-5"
+  ],
+  "accessLevel": 3,
+  "createdAt": "2025-08-15T10:00:00Z",
+  "updatedAt": "2025-08-16T13:30:10Z"
+}
