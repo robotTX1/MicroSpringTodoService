@@ -1,13 +1,14 @@
 package com.robottx.todoservice.service;
 
 import com.robottx.todoservice.config.ServiceConfig;
+import com.robottx.todoservice.constant.CacheConstants;
 import com.robottx.todoservice.exception.InternalServerErrorException;
 import com.robottx.todoservice.exception.UserNotFoundException;
 import com.robottx.todoservice.model.KeycloakUserResponse;
 import com.robottx.todoservice.service.secret.SecretService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -17,8 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 @Slf4j
 @Service
@@ -27,39 +26,27 @@ public class UserServiceImpl implements UserService {
 
     private static final String USER_NOT_FOUND_BY_EMAIL = "User with email %s not found";
 
-    private final ConcurrentMap<String, String> idCache = new ConcurrentHashMap<>();
-    private final ConcurrentMap<String, String> emailCache = new ConcurrentHashMap<>();
-
     private final RestTemplate restTemplate;
     private final SecretService secretService;
     private final ServiceConfig serviceConfig;
-    private final KeycloakService keycloakService;
+    private final AuthHeaderService authHeaderService;
 
     @Override
+    @Cacheable(CacheConstants.DEFAULT_CACHE)
     public String getUserEmail(String userId) {
-        return emailCache.compute(userId, (k, v) -> {
-            if (v == null) {
-                return findUserEmailById(userId);
-            }
-            return v;
-        });
+        log.debug("Fetching email for user id {}", userId);
+        return findUserEmailById(userId);
     }
 
     @Override
+    @Cacheable(CacheConstants.DEFAULT_CACHE)
     public String getUserIdByEmail(String email) {
-        return idCache.compute(email, (k, v) -> {
-            if (v == null) {
-                return findUserIdByEmail(email);
-            }
-            if (StringUtils.isBlank(v)) {
-                throw new InternalServerErrorException("Empty email cached");
-            }
-            return v;
-        });
+        log.debug("Fetching user id for email {}", email);
+        return findUserIdByEmail(email);
     }
 
     private String findUserIdByEmail(String email) {
-        HttpEntity<Void> httpEntity = new HttpEntity<>(keycloakService.createAuthHeaders());
+        HttpEntity<Void> httpEntity = new HttpEntity<>(authHeaderService.createAuthHeaders());
         var response = restTemplate.exchange(buildFindUserByEmailUrl(email), HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<KeycloakUserResponse>>() {});
         if (!response.getStatusCode().is2xxSuccessful()) {
             log.error("User not found with email {}", email);
@@ -72,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private String findUserEmailById(String userId) {
-        HttpEntity<Void> httpEntity = new HttpEntity<>(keycloakService.createAuthHeaders());
+        HttpEntity<Void> httpEntity = new HttpEntity<>(authHeaderService.createAuthHeaders());
         var response = restTemplate.exchange(buildFindUserByIdUrl(userId), HttpMethod.GET, httpEntity, KeycloakUserResponse.class);
         if (!response.getStatusCode().is2xxSuccessful()) {
             log.error("User not found with id {}", userId);

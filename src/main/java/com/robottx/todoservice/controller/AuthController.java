@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.robottx.todoservice.controller.EndpointConstants.LOGIN_ENDPOINT;
-import static com.robottx.todoservice.controller.EndpointConstants.LOGOUT_ALL_ENDPOINT;
-import static com.robottx.todoservice.controller.EndpointConstants.LOGOUT_ENDPOINT;
-import static com.robottx.todoservice.controller.EndpointConstants.REFRESH_ENDPOINT;
+import static com.robottx.todoservice.constant.EndpointConstants.LOGIN_ENDPOINT;
+import static com.robottx.todoservice.constant.EndpointConstants.LOGOUT_ALL_ENDPOINT;
+import static com.robottx.todoservice.constant.EndpointConstants.LOGOUT_ENDPOINT;
+import static com.robottx.todoservice.constant.EndpointConstants.REFRESH_ENDPOINT;
 
 @RestController
 @RequiredArgsConstructor

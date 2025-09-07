@@ -1,24 +1,17 @@
 package com.robottx.todoservice.service.secret;
 
-import com.oracle.bmc.ConfigFileReader;
-import com.oracle.bmc.Region;
-import com.oracle.bmc.auth.AbstractAuthenticationDetailsProvider;
-import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
 import com.oracle.bmc.secrets.SecretsClient;
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails;
 import com.oracle.bmc.secrets.requests.GetSecretBundleByNameRequest;
 import com.oracle.bmc.secrets.responses.GetSecretBundleByNameResponse;
 import com.robottx.todoservice.config.ServiceConfig;
 import com.robottx.todoservice.config.VaultConfig;
-import com.robottx.todoservice.exception.InternalServerErrorException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,29 +22,25 @@ import java.util.concurrent.ConcurrentHashMap;
 @ConditionalOnProperty(name = "secret-provider", havingValue = "vault")
 public class VaultSecretService implements SecretService {
 
+    private final SecretsClient secretsClient;
     private final VaultConfig vaultConfig;
     private final ServiceConfig serviceConfig;
-
-    @Value("${config-directory}")
-    private String configDirectory;
 
     private final Map<String, String> secrets = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void init() {
-        try (SecretsClient client = SecretsClient.builder()
-                .region(Region.fromRegionId(vaultConfig.getVaultRegion()))
-                .build(getConfigFileAuthDetailsProvider())) {
+        try (secretsClient) {
             // Database
-            saveSecret(client, serviceConfig.getDatabaseUsernameSecretName());
-            saveSecret(client, serviceConfig.getDatabasePasswordSecretName());
+            saveSecret(secretsClient, serviceConfig.getDatabaseUsernameSecretName());
+            saveSecret(secretsClient, serviceConfig.getDatabasePasswordSecretName());
             // OAuth
-            saveSecret(client, serviceConfig.getApplicationRealmSecretName());
-            saveSecret(client, serviceConfig.getApplicationClientIdSecretName());
-            saveSecret(client, serviceConfig.getApplicationClientSecretSecretName());
-            saveSecret(client, serviceConfig.getAdminRealmSecretName());
-            saveSecret(client, serviceConfig.getAdminClientIdSecretName());
-            saveSecret(client, serviceConfig.getAdminClientSecretSecretName());
+            saveSecret(secretsClient, serviceConfig.getApplicationRealmSecretName());
+            saveSecret(secretsClient, serviceConfig.getApplicationClientIdSecretName());
+            saveSecret(secretsClient, serviceConfig.getApplicationClientSecretSecretName());
+            saveSecret(secretsClient, serviceConfig.getAdminRealmSecretName());
+            saveSecret(secretsClient, serviceConfig.getAdminClientIdSecretName());
+            saveSecret(secretsClient, serviceConfig.getAdminClientSecretSecretName());
         }
         log.debug("VaultSecretService initialized");
     }
@@ -114,15 +103,6 @@ public class VaultSecretService implements SecretService {
         GetSecretBundleByNameResponse secretBundle = client.getSecretBundleByName(secretBundleRequest);
         Base64SecretBundleContentDetails secretBundleContent = (Base64SecretBundleContentDetails) secretBundle.getSecretBundle().getSecretBundleContent();
         return new String(Base64.getDecoder().decode(secretBundleContent.getContent()));
-    }
-
-    private AbstractAuthenticationDetailsProvider getConfigFileAuthDetailsProvider() {
-        try {
-            ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse("%s/oci.config".formatted(configDirectory));
-            return new ConfigFileAuthenticationDetailsProvider(configFile);
-        } catch (IOException ex) {
-            throw new InternalServerErrorException("Failed to create ConfigFileAuthenticationDetailsProvider", ex);
-        }
     }
 
 }

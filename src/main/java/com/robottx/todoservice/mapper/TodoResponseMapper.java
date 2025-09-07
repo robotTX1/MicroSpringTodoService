@@ -1,28 +1,23 @@
-package com.robottx.todoservice.service.todo;
+package com.robottx.todoservice.mapper;
 
 import com.robottx.todoservice.entity.TodoAccess;
-import com.robottx.todoservice.mapper.TodoMapper;
 import com.robottx.todoservice.model.TodoResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PagedModel;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class TodoResponseMapperServiceImpl implements TodoResponseMapperService {
+@Component
+public class TodoResponseMapper {
 
-    @Override
     public TodoResponse mapTodoAccessToTodoResponse(TodoAccess todoAccess) {
         TodoResponse todoResponse = TodoMapper.INSTANCE.domainToModel(todoAccess.getTodo());
         todoResponse.setAccessLevel(todoAccess.getAccessLevel().getAccessLevel());
         return todoResponse;
     }
 
-    @Override
     public PagedModel<TodoResponse> mapTodoAccessesToResponses(Page<TodoAccess> pagedTodoAccesses) {
         List<TodoResponse> todoResponses = pagedTodoAccesses.getContent().stream()
                 .map(this::mapTodoAccessToTodoResponse)

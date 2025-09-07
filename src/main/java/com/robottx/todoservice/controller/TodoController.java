@@ -24,8 +24,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.robottx.todoservice.controller.EndpointConstants.TODO_BY_ID_ENDPOINT;
-import static com.robottx.todoservice.controller.EndpointConstants.TODO_ENDPOINT;
+import static com.robottx.todoservice.constant.EndpointConstants.TODO_BY_ID_ENDPOINT;
+import static com.robottx.todoservice.constant.EndpointConstants.TODO_ENDPOINT;
 
 @RestController
 @RequiredArgsConstructor

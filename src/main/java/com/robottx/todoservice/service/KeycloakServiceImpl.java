@@ -1,9 +1,12 @@
 package com.robottx.todoservice.service;
 
 import com.robottx.todoservice.config.ServiceConfig;
+import com.robottx.todoservice.constant.CacheConstants;
 import com.robottx.todoservice.model.KeycloakResponse;
 import com.robottx.todoservice.service.secret.SecretService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KeycloakServiceImpl implements KeycloakService {
@@ -23,17 +27,12 @@ public class KeycloakServiceImpl implements KeycloakService {
     private final SecretService secretService;
 
     @Override
+    @Cacheable(CacheConstants.SERVICE_TOKEN_CACHE)
     public KeycloakResponse getServiceToken() {
+        log.debug("Fetching Keycloak service token");
         var requestEntity = new HttpEntity<>(buildBody(), createHeaders());
         var response = restTemplate.exchange(buildServiceTokenUrl(), HttpMethod.POST, requestEntity, KeycloakResponse.class);
         return response.getBody();
-    }
-
-    @Override
-    public HttpHeaders createAuthHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(getServiceToken().getAccessToken());
-        return headers;
     }
 
     private HttpHeaders createHeaders() {

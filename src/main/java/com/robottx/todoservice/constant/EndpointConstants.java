@@ -1,4 +1,4 @@
-package com.robottx.todoservice.controller;
+package com.robottx.todoservice.constant;
 
 import lombok.experimental.UtilityClass;
 

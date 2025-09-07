@@ -1,7 +1,11 @@
 package com.robottx.todoservice.config;
 
+import com.oracle.bmc.auth.AbstractAuthenticationDetailsProvider;
+import com.oracle.bmc.auth.InstancePrincipalsAuthenticationDetailsProvider;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,6 +15,8 @@ import javax.sql.DataSource;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+
+import static org.mockito.Mockito.mock;
 
 @TestConfiguration
 @EnableWebSecurity(debug = true)
@@ -40,6 +46,17 @@ public class TestConfig {
     @Primary
     public Clock clock() {
         return Clock.fixed(FIXED_TIME.toInstant(), TEST_ZONE_ID);
+    }
+
+    @Bean
+    @Primary
+    public CacheManager cacheManager() {
+        return new NoOpCacheManager();
+    }
+
+    @Bean
+    public AbstractAuthenticationDetailsProvider mockAuthenticationDetailsProvider() {
+        return mock(InstancePrincipalsAuthenticationDetailsProvider.class);
     }
 
 }

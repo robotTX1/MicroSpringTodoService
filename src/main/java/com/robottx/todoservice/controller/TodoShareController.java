@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.robottx.todoservice.controller.EndpointConstants.TODO_SHARE_ENDPOINT;
+import static com.robottx.todoservice.constant.EndpointConstants.TODO_SHARE_ENDPOINT;
 
 @RestController
 @RequiredArgsConstructor
