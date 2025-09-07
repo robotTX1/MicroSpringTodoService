@@ -1,6 +1,6 @@
 package com.robottx.todoservice.config;
 
-import com.robottx.todoservice.controller.EndpointConstants;
+import com.robottx.todoservice.constant.EndpointConstants;
 import com.robottx.todoservice.converter.JwtAuthConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

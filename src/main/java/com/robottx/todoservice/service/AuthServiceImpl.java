@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final ServiceConfig serviceConfig;
     private final SecretService secretService;
     private final SecurityService securityService;
-    private final KeycloakService keycloakService;
+    private final AuthHeaderService authHeaderService;
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void logoutUserFromAllSessions(String userId) {
-        var requestEntity = new HttpEntity<>(keycloakService.createAuthHeaders());
+        var requestEntity = new HttpEntity<>(authHeaderService.createAuthHeaders());
         restTemplate.exchange(buildLogoutAllUrl(userId), HttpMethod.POST, requestEntity, Void.class);
     }
 

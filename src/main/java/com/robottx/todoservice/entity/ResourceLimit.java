@@ -10,13 +10,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 
 @Data
 @Entity
 @Builder
+@Immutable
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "RESOURCE_LIMIT")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class ResourceLimit {
 
     @Id
