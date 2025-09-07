@@ -132,7 +132,16 @@
     "allPublicFields": true
   },
   {
-    "name": "com.robottx.todoservice.validation.TodoValidator",
+    "name": "com.robottx.todoservice.validation.TitleAndDescriptionValidator",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true
+  },
+  {
+    "name": "com.robottx.todoservice.validation.FutureWithDefaultValueValidator",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,
