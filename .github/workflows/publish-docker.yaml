@@ -9,7 +9,7 @@ on:
         default: Dockerfile
 
 env:
-  REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/github-actions-test
+  REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_PROJECT_NAME }}
 
 jobs:
   build:
