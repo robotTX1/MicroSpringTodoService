@@ -1,15 +1,17 @@
 package com.robottx.todoservice.model;
 
 import com.robottx.todoservice.validation.ValidTodoTitleOrDescription;
+
+import java.time.ZonedDateTime;
+import java.util.Set;
+
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 
-import java.time.ZonedDateTime;
-import java.util.Set;
+import lombok.Data;
 
 @Data
 @ValidTodoTitleOrDescription

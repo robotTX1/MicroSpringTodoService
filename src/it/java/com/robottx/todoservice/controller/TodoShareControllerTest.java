@@ -1,10 +1,17 @@
 package com.robottx.todoservice.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.robottx.todoservice.MockServerTest;
 import com.robottx.todoservice.constant.EndpointConstants;
 import com.robottx.todoservice.domain.UserAccessLevels;
 import com.robottx.todoservice.entity.TodoAccess;
 import com.robottx.todoservice.repository.TodoAccessRepository;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +19,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TodoShareControllerTest extends MockServerTest {
 

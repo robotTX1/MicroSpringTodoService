@@ -4,17 +4,21 @@ import com.oracle.bmc.secrets.SecretsClient;
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails;
 import com.oracle.bmc.secrets.requests.GetSecretBundleByNameRequest;
 import com.oracle.bmc.secrets.responses.GetSecretBundleByNameResponse;
+
 import com.robottx.todoservice.config.ServiceConfig;
 import com.robottx.todoservice.config.VaultConfig;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import jakarta.annotation.PostConstruct;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -97,11 +101,12 @@ public class VaultSecretService implements SecretService {
 
     private String getSecretFromVault(SecretsClient client, String secretName) {
         GetSecretBundleByNameRequest secretBundleRequest = GetSecretBundleByNameRequest.builder()
-                .vaultId(vaultConfig.getVaultOCID())
+                .vaultId(vaultConfig.getVaultOcid())
                 .secretName(secretName)
                 .build();
         GetSecretBundleByNameResponse secretBundle = client.getSecretBundleByName(secretBundleRequest);
-        Base64SecretBundleContentDetails secretBundleContent = (Base64SecretBundleContentDetails) secretBundle.getSecretBundle().getSecretBundleContent();
+        Base64SecretBundleContentDetails secretBundleContent =
+                (Base64SecretBundleContentDetails) secretBundle.getSecretBundle().getSecretBundleContent();
         return new String(Base64.getDecoder().decode(secretBundleContent.getContent()));
     }
 

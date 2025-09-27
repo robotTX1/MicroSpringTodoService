@@ -1,5 +1,8 @@
 package com.robottx.todoservice.controller;
 
+import static com.robottx.todoservice.constant.EndpointConstants.TODO_BY_ID_ENDPOINT;
+import static com.robottx.todoservice.constant.EndpointConstants.TODO_ENDPOINT;
+
 import com.robottx.todoservice.model.CreateTodoRequest;
 import com.robottx.todoservice.model.PatchTodoRequest;
 import com.robottx.todoservice.model.SearchMode;
@@ -7,8 +10,13 @@ import com.robottx.todoservice.model.SearchRequest;
 import com.robottx.todoservice.model.TodoResponse;
 import com.robottx.todoservice.model.UpdateTodoRequest;
 import com.robottx.todoservice.service.todo.TodoServiceFacade;
+
+import java.net.URI;
+
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,11 +30,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-
-import static com.robottx.todoservice.constant.EndpointConstants.TODO_BY_ID_ENDPOINT;
-import static com.robottx.todoservice.constant.EndpointConstants.TODO_ENDPOINT;
-
 @RestController
 @RequiredArgsConstructor
 public class TodoController {
@@ -35,7 +38,7 @@ public class TodoController {
 
     @GetMapping(TODO_ENDPOINT)
     public ResponseEntity<PagedModel<TodoResponse>> getTodos(SearchRequest request,
-                                                             @RequestParam(required = false, defaultValue = "OWN") SearchMode mode) {
+            @RequestParam(required = false, defaultValue = "OWN") SearchMode mode) {
         return ResponseEntity.ok(todoServiceFacade.findAllTodos(request, mode));
     }
 
@@ -51,12 +54,14 @@ public class TodoController {
     }
 
     @PutMapping(TODO_BY_ID_ENDPOINT)
-    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long todoId, @RequestBody @Valid UpdateTodoRequest request) {
+    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long todoId,
+            @RequestBody @Valid UpdateTodoRequest request) {
         return ResponseEntity.ok(todoServiceFacade.updateTodo(todoId, request));
     }
 
     @PatchMapping(TODO_BY_ID_ENDPOINT)
-    public ResponseEntity<TodoResponse> patchTodo(@PathVariable Long todoId, @RequestBody @Valid PatchTodoRequest request) {
+    public ResponseEntity<TodoResponse> patchTodo(@PathVariable Long todoId,
+            @RequestBody @Valid PatchTodoRequest request) {
         return ResponseEntity.ok(todoServiceFacade.patchTodo(todoId, request));
     }
 

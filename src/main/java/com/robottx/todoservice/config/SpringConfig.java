@@ -7,9 +7,20 @@ import com.oracle.bmc.auth.AbstractAuthenticationDetailsProvider;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
 import com.oracle.bmc.auth.InstancePrincipalsAuthenticationDetailsProvider;
 import com.oracle.bmc.secrets.SecretsClient;
+
 import com.robottx.todoservice.config.jackson.CustomZonedDateTimeSerializer;
 import com.robottx.todoservice.exception.InternalServerErrorException;
 import com.robottx.todoservice.service.secret.SecretService;
+
+import java.io.IOException;
+import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -25,14 +36,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
-
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.time.Clock;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableCaching
@@ -89,7 +92,8 @@ public class SpringConfig {
 
     @Bean
     @ConditionalOnProperty(name = "config-directory", havingValue = "local-config")
-    public AbstractAuthenticationDetailsProvider getConfigFileAuthDetailsProvider(@Value("${config-directory}") String configDirectory) {
+    public AbstractAuthenticationDetailsProvider getConfigFileAuthDetailsProvider(
+            @Value("${config-directory}") String configDirectory) {
         try {
             ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse("%s/oci.config".formatted(configDirectory));
             return new ConfigFileAuthenticationDetailsProvider(configFile);

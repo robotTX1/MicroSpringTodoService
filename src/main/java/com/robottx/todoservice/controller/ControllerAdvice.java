@@ -9,7 +9,11 @@ import com.robottx.todoservice.exception.ResourceLimitException;
 import com.robottx.todoservice.exception.UserNotFoundException;
 import com.robottx.todoservice.exception.ValidationException;
 import com.robottx.todoservice.model.ErrorResponse;
+
+import java.util.Optional;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -22,8 +26,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.util.Optional;
 
 @Slf4j
 @RestControllerAdvice
@@ -138,7 +140,9 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
+            HttpHeaders headers, HttpStatusCode status,
+            WebRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .type(CLIENT_ERROR_TYPE)
                 .title("Unsupported Media Type")
@@ -149,7 +153,9 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+            HttpHeaders headers, HttpStatusCode status,
+            WebRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .type(CLIENT_ERROR_TYPE)
                 .title(INVALID_REQUEST_TITLE)
@@ -160,7 +166,9 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatusCode status,
+            WebRequest request) {
         String details = Optional.ofNullable(ex.getFieldError())
                 .map(e -> "%s %s".formatted(e.getField(), e.getDefaultMessage()))
                 .orElse(ex.getAllErrors().stream()
@@ -180,6 +188,5 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handleAllException(ErrorResponse response) {
         return new ResponseEntity<>(response, response.getStatus());
     }
-
 
 }

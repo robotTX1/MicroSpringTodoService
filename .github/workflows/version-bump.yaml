@@ -1,0 +1,21 @@
+name: Version bump and tag creation
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  version-bump-and-tag:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Release
+        uses: qcastel/github-actions-maven-release@v1.12.43
+        with:
+          git-release-bot-name: "github-actions[bot]"
+          git-release-bot-email: "github-actions[bot]@users.noreply.github.com"
+          maven-args: "-Dmaven.javadoc.skip=true -DskipTests -DskipITs -Ddockerfile.skip -DdockerCompose.skip -Dmaven.deploy.skip=true"
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}

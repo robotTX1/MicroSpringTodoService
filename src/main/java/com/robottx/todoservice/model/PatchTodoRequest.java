@@ -1,13 +1,15 @@
 package com.robottx.todoservice.model;
 
 import com.robottx.todoservice.validation.FutureWithDefaultValue;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+
+import lombok.Data;
 
 @Data
 public class PatchTodoRequest implements BaseTodoRequest {

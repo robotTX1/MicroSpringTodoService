@@ -4,8 +4,10 @@ import com.robottx.todoservice.config.ServiceConfig;
 import com.robottx.todoservice.constant.CacheConstants;
 import com.robottx.todoservice.model.KeycloakResponse;
 import com.robottx.todoservice.service.secret.SecretService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +33,8 @@ public class KeycloakServiceImpl implements KeycloakService {
     public KeycloakResponse getServiceToken() {
         log.debug("Fetching Keycloak service token");
         var requestEntity = new HttpEntity<>(buildBody(), createHeaders());
-        var response = restTemplate.exchange(buildServiceTokenUrl(), HttpMethod.POST, requestEntity, KeycloakResponse.class);
+        var response =
+                restTemplate.exchange(buildServiceTokenUrl(), HttpMethod.POST, requestEntity, KeycloakResponse.class);
         return response.getBody();
     }
 
