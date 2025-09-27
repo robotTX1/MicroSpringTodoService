@@ -6,8 +6,14 @@ import com.robottx.todoservice.exception.InternalServerErrorException;
 import com.robottx.todoservice.exception.UserNotFoundException;
 import com.robottx.todoservice.model.KeycloakUserResponse;
 import com.robottx.todoservice.service.secret.SecretService;
+
+import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -15,9 +21,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -47,20 +50,24 @@ public class UserServiceImpl implements UserService {
 
     private String findUserIdByEmail(String email) {
         HttpEntity<Void> httpEntity = new HttpEntity<>(authHeaderService.createAuthHeaders());
-        var response = restTemplate.exchange(buildFindUserByEmailUrl(email), HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<KeycloakUserResponse>>() {});
+        var response = restTemplate.exchange(buildFindUserByEmailUrl(email), HttpMethod.GET, httpEntity,
+                new ParameterizedTypeReference<List<KeycloakUserResponse>>() {});
         if (!response.getStatusCode().is2xxSuccessful()) {
             log.error("User not found with email {}", email);
             throw new UserNotFoundException(USER_NOT_FOUND_BY_EMAIL.formatted(email));
         }
         return Optional.ofNullable(response.getBody())
                 .filter(list -> !list.isEmpty())
-                .map(list -> list.getFirst().getId())
+                .map(List::getFirst)
+                .filter(user -> StringUtils.equals(email, user.getEmail()))
+                .map(KeycloakUserResponse::getId)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_BY_EMAIL.formatted(email)));
     }
 
     private String findUserEmailById(String userId) {
         HttpEntity<Void> httpEntity = new HttpEntity<>(authHeaderService.createAuthHeaders());
-        var response = restTemplate.exchange(buildFindUserByIdUrl(userId), HttpMethod.GET, httpEntity, KeycloakUserResponse.class);
+        var response = restTemplate.exchange(buildFindUserByIdUrl(userId), HttpMethod.GET, httpEntity,
+                KeycloakUserResponse.class);
         if (!response.getStatusCode().is2xxSuccessful()) {
             log.error("User not found with id {}", userId);
             throw new InternalServerErrorException();

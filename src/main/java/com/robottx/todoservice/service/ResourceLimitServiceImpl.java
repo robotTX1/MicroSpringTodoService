@@ -7,11 +7,13 @@ import com.robottx.todoservice.exception.InternalServerErrorException;
 import com.robottx.todoservice.exception.ResourceLimitException;
 import com.robottx.todoservice.repository.ResourceLimitRepository;
 import com.robottx.todoservice.repository.TodoAccessRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -23,20 +25,23 @@ public class ResourceLimitServiceImpl implements ResourceLimitService {
     private static final String CATEGORY_LIMIT_REACHED = "Max Category limit reached for Todo. Limit: %d";
     private static final String CATEGORY_LIMIT_REACHED_LOG = "User %s has reached the maximum limit of Category: {}";
     private static final String SHARE_LIMIT_REACHED = "Max Share limit reached for Todo. Limit: %d";
-    private static final String SHARE_LIMIT_REACHED_LOG = "User %s has reached the maximum limit of Shares: {} on Todo %d";
+    private static final String SHARE_LIMIT_REACHED_LOG =
+            "User %s has reached the maximum limit of Shares: {} on Todo %d";
 
     private final TodoAccessRepository todoAccessRepository;
     private final ResourceLimitRepository resourceLimitRepository;
 
     @Override
     public void validateTodoResourceLimit(String userId) {
-        Integer todoCount = todoAccessRepository.countByUserIdAndAccessLevel(userId, UserAccessLevels.OWNER.getLevel()) + 1;
+        Integer todoCount =
+                todoAccessRepository.countByUserIdAndAccessLevel(userId, UserAccessLevels.OWNER.getLevel()) + 1;
         validate(ResourceLimits.TODO_LIMIT, todoCount, TODO_LIMIT_REACHED, TODO_LIMIT_REACHED_LOG.formatted(userId));
     }
 
     @Override
     public void validateCategoryLimit(String userId, int count) {
-        validate(ResourceLimits.CATEGORY_LIMIT, count, CATEGORY_LIMIT_REACHED, CATEGORY_LIMIT_REACHED_LOG.formatted(userId));
+        validate(ResourceLimits.CATEGORY_LIMIT, count, CATEGORY_LIMIT_REACHED,
+                 CATEGORY_LIMIT_REACHED_LOG.formatted(userId));
     }
 
     @Override
@@ -46,7 +51,8 @@ public class ResourceLimitServiceImpl implements ResourceLimitService {
             return;
         }
         Integer shareCount = todoAccessRepository.countAllByTodoId(todoId);
-        validate(ResourceLimits.SHARE_LIMIT, shareCount, SHARE_LIMIT_REACHED, SHARE_LIMIT_REACHED_LOG.formatted(userId, todoId));
+        validate(ResourceLimits.SHARE_LIMIT, shareCount, SHARE_LIMIT_REACHED,
+                 SHARE_LIMIT_REACHED_LOG.formatted(userId, todoId));
     }
 
     private void validate(ResourceLimits resourceLimit, Integer count, String message, String logMessage) {
@@ -59,7 +65,7 @@ public class ResourceLimitServiceImpl implements ResourceLimitService {
 
     private Integer getMaxResourceLimit(ResourceLimits resourceLimit) {
         return resourceLimitRepository.findByResource(resourceLimit.getName())
-                .orElseThrow(InternalServerErrorException::new).getMaxNumber();
+                                      .orElseThrow(InternalServerErrorException::new).getMaxNumber();
     }
 
 }

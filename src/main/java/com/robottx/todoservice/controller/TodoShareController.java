@@ -1,11 +1,16 @@
 package com.robottx.todoservice.controller;
 
+import static com.robottx.todoservice.constant.EndpointConstants.TODO_SHARE_ENDPOINT;
+
 import com.robottx.todoservice.model.TodoShareDeleteRequest;
 import com.robottx.todoservice.model.TodoShareRequest;
 import com.robottx.todoservice.model.TodoShareResponse;
 import com.robottx.todoservice.service.todo.TodoShareService;
+
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.robottx.todoservice.constant.EndpointConstants.TODO_SHARE_ENDPOINT;
 
 @RestController
 @RequiredArgsConstructor

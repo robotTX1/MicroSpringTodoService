@@ -1,19 +1,22 @@
 package com.robottx.todoservice.service;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toCollection;
+
 import com.robottx.todoservice.entity.Category;
 import com.robottx.todoservice.entity.TodoWithCategory;
 import com.robottx.todoservice.repository.CategoryRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toCollection;
+import jakarta.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +32,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Map<Long, Set<Category>> findCategoriesForTodos(Set<Long> todoIds) {
         return categoryRepository.findAllByTodoIds(todoIds).stream()
-                .collect(groupingBy(TodoWithCategory::getId, mapping(TodoWithCategory::getCategory, toCollection(LinkedHashSet::new))));
+                .collect(groupingBy(TodoWithCategory::getId,
+                        mapping(TodoWithCategory::getCategory, toCollection(LinkedHashSet::new))));
     }
 
     @Override

@@ -15,18 +15,21 @@ import com.robottx.todoservice.security.SecurityService;
 import com.robottx.todoservice.service.ResourceLimitService;
 import com.robottx.todoservice.service.UserAccessLevelService;
 import com.robottx.todoservice.service.UserService;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

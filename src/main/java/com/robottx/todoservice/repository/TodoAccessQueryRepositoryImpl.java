@@ -3,6 +3,9 @@ package com.robottx.todoservice.repository;
 import com.robottx.todoservice.domain.QueryParams;
 import com.robottx.todoservice.entity.Todo;
 import com.robottx.todoservice.entity.TodoAccess;
+
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -12,15 +15,15 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Repository
@@ -45,7 +48,8 @@ public class TodoAccessQueryRepositoryImpl implements TodoAccessQueryRepository 
         todo.join("priority", JoinType.INNER);
         todo.join("categories", JoinType.LEFT);
         todoAccessRoot.join("accessLevel", JoinType.INNER);
-        Predicate specPredicate = spec != null ? spec.toPredicate(todoAccessRoot, query, criteriaBuilder) : criteriaBuilder.conjunction();
+        Predicate specPredicate =
+                spec != null ? spec.toPredicate(todoAccessRoot, query, criteriaBuilder) : criteriaBuilder.conjunction();
         query.select(todoAccessRoot.get("todo").get("id"))
                 .distinct(true)
                 .where(specPredicate);

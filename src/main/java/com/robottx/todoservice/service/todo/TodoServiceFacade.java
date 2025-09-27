@@ -6,6 +6,7 @@ import com.robottx.todoservice.model.SearchMode;
 import com.robottx.todoservice.model.SearchRequest;
 import com.robottx.todoservice.model.TodoResponse;
 import com.robottx.todoservice.model.UpdateTodoRequest;
+
 import org.springframework.data.web.PagedModel;
 
 public interface TodoServiceFacade {
@@ -21,6 +22,5 @@ public interface TodoServiceFacade {
     TodoResponse patchTodo(Long id, PatchTodoRequest request);
 
     void deleteTodo(Long id);
-
 
 }

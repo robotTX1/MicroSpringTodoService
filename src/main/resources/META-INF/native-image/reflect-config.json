@@ -60,24 +60,6 @@
     "allPublicFields": true
   },
   {
-    "name": "com.robottx.todoservice.model.KeycloakErrorResponse",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredFields": true,
-    "allPublicFields": true
-  },
-  {
-    "name": "com.robottx.todoservice.model.LoginRequest",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredFields": true,
-    "allPublicFields": true
-  },
-  {
     "name": "com.robottx.todoservice.model.PriorityResponse",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,

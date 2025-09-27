@@ -1,7 +1,16 @@
 package com.robottx.todoservice.config;
 
+import static org.mockito.Mockito.mock;
+
 import com.oracle.bmc.auth.AbstractAuthenticationDetailsProvider;
 import com.oracle.bmc.auth.InstancePrincipalsAuthenticationDetailsProvider;
+
+import java.time.Clock;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+import javax.sql.DataSource;
+
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.cache.CacheManager;
@@ -10,13 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.testcontainers.containers.MySQLContainer;
-
-import javax.sql.DataSource;
-import java.time.Clock;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-
-import static org.mockito.Mockito.mock;
 
 @TestConfiguration
 @EnableWebSecurity(debug = true)

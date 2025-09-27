@@ -1,7 +1,7 @@
 package com.robottx.todoservice.config;
 
-import com.robottx.todoservice.constant.EndpointConstants;
 import com.robottx.todoservice.converter.JwtAuthConverter;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,14 +19,12 @@ public class SecurityConfig {
     private String springDocsPath;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthConverter converter, ServiceConfig serviceConfig) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthConverter converter, ServiceConfig serviceConfig)
+            throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(EndpointConstants.LOGIN_ENDPOINT).permitAll()
-                        .requestMatchers(EndpointConstants.REFRESH_ENDPOINT).permitAll()
-                        .requestMatchers(EndpointConstants.LOGOUT_ENDPOINT).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(springDocsPath).permitAll()
                         .anyRequest().authenticated())

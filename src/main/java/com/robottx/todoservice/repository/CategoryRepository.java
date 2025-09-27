@@ -2,13 +2,14 @@ package com.robottx.todoservice.repository;
 
 import com.robottx.todoservice.entity.Category;
 import com.robottx.todoservice.entity.TodoWithCategory;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 

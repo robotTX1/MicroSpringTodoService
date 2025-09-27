@@ -12,18 +12,6 @@ import com.robottx.todoservice.model.SearchRequest;
 import com.robottx.todoservice.repository.TodoAccessQueryRepository;
 import com.robottx.todoservice.repository.TodoAccessRepository;
 import com.robottx.todoservice.service.CategoryService;
-import cz.jirutka.rsql.parser.RSQLParserException;
-import io.github.perplexhub.rsql.PropertyBlacklistedException;
-import io.github.perplexhub.rsql.RSQLJPASupport;
-import io.github.perplexhub.rsql.UnknownPropertyException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +20,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import cz.jirutka.rsql.parser.RSQLParserException;
+import io.github.perplexhub.rsql.PropertyBlacklistedException;
+import io.github.perplexhub.rsql.RSQLJPASupport;
+import io.github.perplexhub.rsql.UnknownPropertyException;
 
 @Slf4j
 @Service
@@ -96,21 +99,21 @@ public class TodoQueryServiceImpl implements TodoQueryService {
         }
     }
 
-    private QueryParams<TodoAccess> createQueryParams(String userId, SearchRequest searchRequest, SearchMode searchMode) {
+    private QueryParams<TodoAccess> createQueryParams(String userId, SearchRequest request, SearchMode searchMode) {
         Specification<TodoAccess> query = filterByUserId(userId)
                 .and(filterBySearchMode(searchMode));
         Specification<TodoAccess> sort = null;
-        if (!StringUtils.isEmpty(searchRequest.getSearch())) {
-            query = addSearchSpecification(query, searchRequest.getSearch());
+        if (!StringUtils.isEmpty(request.getSearch())) {
+            query = addSearchSpecification(query, request.getSearch());
         }
-        if (!StringUtils.isEmpty(searchRequest.getSort())) {
-            sort = createSort(searchRequest.getSort());
+        if (!StringUtils.isEmpty(request.getSort())) {
+            sort = createSort(request.getSort());
         }
         return QueryParams.<TodoAccess>builder()
                 .userId(userId)
                 .querySpecification(query)
                 .sortSpecification(sort)
-                .pageable(PageRequest.of(searchRequest.getPageNumber(), searchRequest.getPageSize()))
+                .pageable(PageRequest.of(request.getPageNumber(), request.getPageSize()))
                 .build();
     }
 
@@ -121,10 +124,10 @@ public class TodoQueryServiceImpl implements TodoQueryService {
 
     private Specification<TodoAccess> filterBySearchMode(SearchMode searchMode) {
         return (root, query, criteriaBuilder) -> switch (searchMode) {
-            case OWN ->
-                    criteriaBuilder.equal(root.get("accessLevel").get("accessLevel"), UserAccessLevels.OWNER.getLevel());
-            case SHARED ->
-                    criteriaBuilder.notEqual(root.get("accessLevel").get("accessLevel"), UserAccessLevels.OWNER.getLevel());
+            case OWN -> criteriaBuilder.equal(root.get("accessLevel").get("accessLevel"),
+                    UserAccessLevels.OWNER.getLevel());
+            case SHARED -> criteriaBuilder.notEqual(root.get("accessLevel").get("accessLevel"),
+                    UserAccessLevels.OWNER.getLevel());
             case ALL -> criteriaBuilder.conjunction();
         };
     }

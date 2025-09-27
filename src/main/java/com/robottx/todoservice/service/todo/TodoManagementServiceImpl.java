@@ -16,14 +16,17 @@ import com.robottx.todoservice.service.CategoryService;
 import com.robottx.todoservice.service.PriorityService;
 import com.robottx.todoservice.service.ResourceLimitService;
 import com.robottx.todoservice.service.UserAccessLevelService;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
+
+import jakarta.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
