@@ -11,6 +11,7 @@ RUN mvn dependency:go-offline -B
 
 # Do the Maven build!
 # Incremental docker builds will resume here when you change sources
+COPY build_config build_config
 COPY src src
 RUN mvn package -DskipTests
 
