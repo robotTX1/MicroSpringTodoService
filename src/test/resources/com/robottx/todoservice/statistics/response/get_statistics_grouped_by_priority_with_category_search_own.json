@@ -1,0 +1,12 @@
+{
+  "Normal": {
+    "total": 1,
+    "finished": 0,
+    "unfinished": 1
+  },
+  "Critical": {
+    "total": 1,
+    "finished": 0,
+    "unfinished": 1
+  }
+}
