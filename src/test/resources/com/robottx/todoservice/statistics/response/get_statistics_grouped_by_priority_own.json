@@ -1,0 +1,22 @@
+{
+  "Not required": {
+    "total": 1,
+    "finished": 0,
+    "unfinished": 1
+  },
+  "Normal": {
+    "total": 2,
+    "finished": 0,
+    "unfinished": 2
+  },
+  "High": {
+    "total": 1,
+    "finished": 1,
+    "unfinished": 0
+  },
+  "Critical": {
+    "total": 1,
+    "finished": 0,
+    "unfinished": 1
+  }
+}

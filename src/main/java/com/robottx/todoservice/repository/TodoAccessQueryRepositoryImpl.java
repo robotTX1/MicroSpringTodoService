@@ -16,7 +16,7 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,12 +25,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Repository
+@RequiredArgsConstructor
 public class TodoAccessQueryRepositoryImpl implements TodoAccessQueryRepository {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Override
     @Transactional(readOnly = true)
@@ -40,7 +40,9 @@ public class TodoAccessQueryRepositoryImpl implements TodoAccessQueryRepository 
         return new PageImpl<>(todoAccesses, queryParams.getPageable(), ids.size());
     }
 
-    private List<Long> findAllIdsBySpec(Specification<TodoAccess> spec) {
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findAllIdsBySpec(Specification<TodoAccess> spec) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
         Root<TodoAccess> todoAccessRoot = query.from(TodoAccess.class);
