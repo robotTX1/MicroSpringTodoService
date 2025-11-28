@@ -3,6 +3,7 @@ package com.robottx.todoservice.model;
 import com.robottx.todoservice.validation.ValidTodoTitleOrDescription;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.Set;
 
 import jakarta.validation.constraints.Future;
@@ -36,6 +37,6 @@ public class CreateTodoRequest implements BaseTodoRequest {
     @NotNull
     private Integer priority;
 
-    private Set<String> categories;
+    private Set<String> categories = Collections.emptySet();
 
 }

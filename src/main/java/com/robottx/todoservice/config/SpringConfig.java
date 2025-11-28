@@ -80,17 +80,20 @@ public class SpringConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(name = "secret-provider", havingValue = "vault")
     public SecretsClient secretsClient(AbstractAuthenticationDetailsProvider authenticationDetailsProvider) {
         return SecretsClient.builder().build(authenticationDetailsProvider);
     }
 
     @Bean
+    @ConditionalOnProperty(name = "secret-provider", havingValue = "vault")
     @ConditionalOnProperty(name = "config-directory", havingValue = "config")
     public AbstractAuthenticationDetailsProvider instancePrincipalDetailsProvider() {
         return InstancePrincipalsAuthenticationDetailsProvider.builder().build();
     }
 
     @Bean
+    @ConditionalOnProperty(name = "secret-provider", havingValue = "vault")
     @ConditionalOnProperty(name = "config-directory", havingValue = "local-config")
     public AbstractAuthenticationDetailsProvider getConfigFileAuthDetailsProvider(
             @Value("${config-directory}") String configDirectory) {
