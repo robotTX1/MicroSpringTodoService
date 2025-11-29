@@ -134,5 +134,9 @@
   {
     "name": "org.springframework.boot.autoconfigure.condition.ConditionalOnProperty",
     "methods": [{"name": "<init>", "parameterTypes": [] }]
+  },
+  {
+    "name": "org.springframework.core.annotation.TypeMappedAnnotation[]",
+    "unsafeAllocated": true
   }
 ]
