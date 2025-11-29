@@ -19,7 +19,7 @@ public class ServiceConfig {
     private String databasePasswordSecretName;
 
     // OAuth
-    private String authorizationServerUrl;
+    private String authorizationServerIssuerUri;
     private String authorizationServerJwksUri;
     private String authorizationServerTokenEndpoint;
     private String authorizationServerLogoutEndpoint;
